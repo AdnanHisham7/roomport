@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { ArrowLeft, Globe, EyeOff, MapPin, Building2, Image as ImageIcon, Loader2, Trash2, Save } from 'lucide-react';
+import { ArrowLeft, Globe, EyeOff, MapPin, Building2, Image as ImageIcon, Loader2, Trash2, Save, LocateFixed } from 'lucide-react';
 import { Button, Input, Textarea, Select } from '@/components/ui';
 import { Card } from '@/components/ui/Card';
 import { Tabs } from '@/components/ui/Tabs';
@@ -24,6 +24,7 @@ const buildingTypeOptions = [
 interface DetailsForm {
   name: string; type: string; description: string; yearOfBuild: string; sqft: number;
   address: string; city: string; state: string; pincode: string; landmark: string; country: string; amenities: string;
+  latitude?: number; longitude?: number;
 }
 
 export default function BuildingManagePage() {
@@ -42,11 +43,12 @@ export default function BuildingManagePage() {
 
   // ── Fix: initialise images from the loaded building, not just useState() ──
   const [images, setImages] = useState<string[]>([]);
+  const [detectingLocation, setDetectingLocation] = useState(false);
   useEffect(() => {
     if (building) setImages(building.images ?? []);
   }, [building]);
 
-  const { register, handleSubmit } = useForm<DetailsForm>({
+  const { register, handleSubmit, setValue } = useForm<DetailsForm>({
     values: building
       ? {
           name:        building.name,
@@ -61,6 +63,8 @@ export default function BuildingManagePage() {
           landmark:    building.location.landmark ?? '',
           country:     building.location.country,
           amenities:   building.amenities?.join(', ') ?? '',
+          latitude:    building.location.latitude ?? undefined,
+          longitude:   building.location.longitude ?? undefined,
         }
       : undefined,
   });
@@ -78,7 +82,7 @@ export default function BuildingManagePage() {
           description: values.description,
           yearOfBuild: values.yearOfBuild,
           sqft:        Number(values.sqft) || undefined,
-          location:    { address: values.address, city: values.city, state: values.state, pincode: values.pincode, landmark: values.landmark, country: values.country },
+          location:    { address: values.address, city: values.city, state: values.state, pincode: values.pincode, landmark: values.landmark, country: values.country, latitude: values.latitude, longitude: values.longitude },
           amenities:   values.amenities.split(',').map(a => a.trim()).filter(Boolean),
           images,   // ← always send current images array
         },
@@ -96,6 +100,27 @@ export default function BuildingManagePage() {
     } catch (err: any) {
       toast.error(err?.data?.message ?? 'Could not update visibility.');
     }
+  };
+
+  const handleDetectLocation = () => {
+    if (!navigator.geolocation) {
+      toast.error("Your browser doesn't support location detection.");
+      return;
+    }
+    setDetectingLocation(true);
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setValue('latitude', Number(position.coords.latitude.toFixed(6)), { shouldDirty: true });
+        setValue('longitude', Number(position.coords.longitude.toFixed(6)), { shouldDirty: true });
+        setDetectingLocation(false);
+        toast.success('Location detected — remember to save changes.');
+      },
+      () => {
+        setDetectingLocation(false);
+        toast.error('Could not detect your location. Enter coordinates manually if needed.');
+      },
+      { enableHighAccuracy: true, timeout: 10000 },
+    );
   };
 
   const onFilesSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -174,7 +199,18 @@ export default function BuildingManagePage() {
             </div>
 
             <div className="border-t border-line pt-5">
-              <p className="mb-3 text-sm font-semibold text-ink">Location</p>
+              <div className="mb-3 flex items-center justify-between">
+                <p className="text-sm font-semibold text-ink">Location</p>
+                <button
+                  type="button"
+                  onClick={handleDetectLocation}
+                  disabled={detectingLocation}
+                  className="flex items-center gap-1.5 text-xs font-medium text-crimson-600 hover:text-crimson-700 disabled:opacity-50"
+                >
+                  {detectingLocation ? <Loader2 className="size-3.5 animate-spin" /> : <LocateFixed className="size-3.5" />}
+                  Use current location
+                </button>
+              </div>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <Input label="Address" className="sm:col-span-2" {...register('address', { required: true })} />
                 <Input label="City"    {...register('city',    { required: true })} />
@@ -182,6 +218,8 @@ export default function BuildingManagePage() {
                 <Input label="Pincode" {...register('pincode', { required: true })} />
                 <Input label="Landmark" {...register('landmark')} />
                 <Input label="Country" {...register('country', { required: true })} />
+                <Input label="Latitude" type="number" step="any" hint="Needed for 'near me' search on the public site" {...register('latitude', { valueAsNumber: true })} />
+                <Input label="Longitude" type="number" step="any" {...register('longitude', { valueAsNumber: true })} />
               </div>
             </div>
 

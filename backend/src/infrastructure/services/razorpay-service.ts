@@ -93,6 +93,13 @@ export class RazorpayService implements IRazorpayService {
   ): Promise<IRazorpayRefund> {
     const { keyId, keySecret } = this.assertConfigured();
 
+    if (!paymentId || !paymentId.startsWith("pay_")) {
+      throw new AppError(
+        `Invalid Razorpay Payment ID: "${paymentId}". Refund requires a valid payment ID starting with "pay_".`,
+        400
+      );
+    }
+
     const payload: Record<string, unknown> = {};
     if (amountInRupees !== undefined) {
       payload.amount = Math.round(amountInRupees * 100);

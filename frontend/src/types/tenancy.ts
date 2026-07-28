@@ -26,6 +26,7 @@ export interface Tenant {
   vacateDate?: string;
   paidAt?: string;
   terms?: string;
+  portalEnabled?: boolean;
   createdAt?: string;
   updatedAt?: string;
 }

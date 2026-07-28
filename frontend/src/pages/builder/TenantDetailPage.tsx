@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import {
   ArrowLeft, Mail, Phone, Briefcase, Save, Trash2, FileSignature, Plus,
-  CreditCard, CheckCircle2, Clock, AlertCircle, ChevronDown, ChevronUp,
+  CreditCard, CheckCircle2, Clock, AlertCircle, ChevronDown, ChevronUp, MonitorSmartphone,
 } from 'lucide-react';
 import { Button, Input, Select, Textarea } from '@/components/ui';
 import { Card } from '@/components/ui/Card';
@@ -12,7 +12,7 @@ import { StatusPill } from '@/components/ui/Badge';
 import { Avatar, PageLoader } from '@/components/ui/Avatar';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { RecordPaymentModal } from '@/components/payment/RecordPaymentModal';
-import { useGetTenantByIdQuery, useUpdateTenantMutation, useDeleteTenantMutation } from '@/store/api/tenantApi';
+import { useGetTenantByIdQuery, useUpdateTenantMutation, useDeleteTenantMutation, useSetTenantPortalAccessMutation } from '@/store/api/tenantApi';
 import { useGetAgreementsQuery } from '@/store/api/agreementApi';
 import { useGetPaymentRecordsQuery } from '@/store/api/paymentRecordApi';
 import { formatCurrency, formatDate, titleCase } from '@/utils/format';
@@ -50,12 +50,14 @@ export default function TenantDetailPage() {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [recordOpen, setRecordOpen] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
+  const [portalConfirmOpen, setPortalConfirmOpen] = useState(false);
 
   const { data, isLoading }        = useGetTenantByIdQuery(id!, { skip: !id });
   const { data: agreementsData }   = useGetAgreementsQuery({ tenantId: id }, { skip: !id });
   const { data: paymentData }      = useGetPaymentRecordsQuery(id!, { skip: !id });
   const [updateTenant, { isLoading: saving }]   = useUpdateTenantMutation();
   const [deleteTenant, { isLoading: deleting }] = useDeleteTenantMutation();
+  const [setPortalAccess, { isLoading: settingPortalAccess }] = useSetTenantPortalAccessMutation();
 
   const tenant = data?.data;
   const payments: PaymentRecord[] = paymentData?.data ?? [];
@@ -87,6 +89,17 @@ export default function TenantDetailPage() {
       navigate('/dashboard/tenants');
     } catch (err: any) {
       toast.error(err?.data?.message ?? 'Could not delete tenant.');
+    }
+  };
+
+  const onTogglePortalAccess = async () => {
+    try {
+      const enabled = !tenant.portalEnabled;
+      await setPortalAccess({ id, enabled }).unwrap();
+      toast.success(enabled ? 'Portal access enabled — setup email sent.' : 'Portal access disabled.');
+      setPortalConfirmOpen(false);
+    } catch (err: any) {
+      toast.error(err?.data?.message ?? 'Could not update portal access.');
     }
   };
 
@@ -224,6 +237,32 @@ export default function TenantDetailPage() {
               </div>
             )}
           </Card>
+
+          {/* Tenant Portal access */}
+          <Card padding="lg">
+            <div className="mb-2 flex items-center justify-between">
+              <h3 className="flex items-center gap-1.5 font-display text-sm font-semibold text-ink">
+                <MonitorSmartphone className="size-4 text-crimson-500" /> Tenant Portal
+              </h3>
+              <span className={cn('rounded-full px-2 py-0.5 text-[10.5px] font-semibold', tenant.portalEnabled ? 'bg-sage-50 text-sage-600' : 'bg-paper-dim text-ink-faint')}>
+                {tenant.portalEnabled ? 'Active' : 'Disabled'}
+              </span>
+            </div>
+            <p className="mb-3 text-xs text-ink-faint">
+              {tenant.portalEnabled
+                ? 'This tenant can log in to view their dues, payments, and documents.'
+                : 'Enable to let this tenant log in and view their dues, payments, and documents.'}
+            </p>
+            <Button
+              size="sm"
+              variant={tenant.portalEnabled ? 'outline' : 'primary'}
+              loading={settingPortalAccess}
+              onClick={() => setPortalConfirmOpen(true)}
+              className="w-full justify-center"
+            >
+              {tenant.portalEnabled ? 'Disable portal access' : 'Enable portal access'}
+            </Button>
+          </Card>
         </div>
       </div>
 
@@ -237,6 +276,21 @@ export default function TenantDetailPage() {
       )}
 
       <ConfirmDialog open={deleteOpen} onClose={() => setDeleteOpen(false)} onConfirm={onDelete} loading={deleting} title="Remove this tenant?" description="This won't delete their lease history." confirmLabel="Remove tenant" />
+
+      <ConfirmDialog
+        open={portalConfirmOpen}
+        onClose={() => setPortalConfirmOpen(false)}
+        onConfirm={onTogglePortalAccess}
+        loading={settingPortalAccess}
+        title={tenant.portalEnabled ? 'Disable tenant portal access?' : 'Enable tenant portal access?'}
+        description={
+          tenant.portalEnabled
+            ? `${tenant.firstName} will no longer be able to log in to their tenant portal.`
+            : `${tenant.firstName} will receive an email with a link to set up their tenant portal password.`
+        }
+        confirmLabel={tenant.portalEnabled ? 'Disable access' : 'Enable access'}
+      />
     </div>
+
   );
 }

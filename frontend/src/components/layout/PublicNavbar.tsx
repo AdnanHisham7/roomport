@@ -53,6 +53,9 @@ export function PublicNavbar() {
             </button>
           ) : (
             <>
+              <Link to="/tenant-portal/login" className="px-3 py-2 text-[13.5px] font-medium text-ink-soft transition hover:text-ink">
+                Tenant login
+              </Link>
               <Link to="/login" className="px-3 py-2 text-[13.5px] font-medium text-ink-soft transition hover:text-ink">
                 Log in
               </Link>
@@ -93,6 +96,9 @@ export function PublicNavbar() {
                   <>
                     <Button variant="outline" onClick={() => { setOpen(false); navigate('/login'); }}>Log in</Button>
                     <Button onClick={() => { setOpen(false); navigate('/get-started'); }}>List your property</Button>
+                    <Link to="/tenant-portal/login" onClick={() => setOpen(false)} className="text-center text-xs font-medium text-ink-faint hover:text-ink-soft">
+                      Tenant portal login
+                    </Link>
                   </>
                 )}
               </div>

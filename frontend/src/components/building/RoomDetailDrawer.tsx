@@ -44,8 +44,7 @@ export function RoomDetailDrawer({ unit, open, onClose }: { unit: Unit | null; o
   );
   const occupyingTenant = tenantsData?.data?.find(t => t.unitId === unit?._id);
 
-  const { register, handleSubmit, reset, watch, formState: { isDirty } } = useForm<FormValues>();
-  const watchStatus = watch('status');
+  const { register, handleSubmit, reset, formState: { isDirty } } = useForm<FormValues>();
 
   useEffect(() => {
     if (unit) {
@@ -76,8 +75,8 @@ export function RoomDetailDrawer({ unit, open, onClose }: { unit: Unit | null; o
           status: values.status as any,
           amenities: values.amenities.split(',').map(a => a.trim()).filter(Boolean),
           images,
+          tokenAmount: Number(values.tokenAmount) || 0,
         };
-        if (values.status === 'reserved') body.tokenAmount = Number(values.tokenAmount);
 
         await updateUnit({ id: unit._id, body }).unwrap();
       toast.success('Room updated.');
@@ -146,16 +145,14 @@ export function RoomDetailDrawer({ unit, open, onClose }: { unit: Unit | null; o
               <Select label="Status" options={statusOptions} {...register('status')} />
             </div>
 
-            {/* Token amount — only when status is reserved */}
-            {watchStatus === 'reserved' && (
-              <Input
-                label="Token / advance amount"
-                hint="Amount collected as reservation deposit"
-                type="number" step="0.01" min={0}
-                leftIcon={<Coins className="size-4" />}
-                {...register('tokenAmount')}
-              />
-            )}
+            {/* Token amount — used for reservation deposits and online booking payments */}
+            <Input
+              label="Booking token amount"
+              hint="Amount applicants can pay online to book this room from the public listing (leave 0 to disable online payment)"
+              type="number" step="0.01" min={0}
+              leftIcon={<Coins className="size-4" />}
+              {...register('tokenAmount')}
+            />
 
             <div className="grid grid-cols-2 gap-3">
               <Input label="Bedrooms" type="number" min={0} leftIcon={<BedDouble className="size-4" />} {...register('bedrooms')} />
