@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import type { IBootstrapUseCase } from "../../application/interface/common/bootstrap-usecase.impl";
+import type { IBootstrapUseCase } from "../../application/interface/common/bootstrap-usecase.interface";
 import { AppError } from "../../shared/error/app-error";
 
 export class BootstrapController {

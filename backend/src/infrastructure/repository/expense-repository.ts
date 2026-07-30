@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { ExpenseCategory, IExpense } from "../../domain/entities/Expense";
-import { IExpenseRepository } from "../../domain/repository/expense-repository-impl";
+import { IExpenseRepository } from "../../domain/repository/expense-repository.interface";
 import { ExpenseModel } from "../db/model/expense-model";
 
 export class ExpenseRepository implements IExpenseRepository {

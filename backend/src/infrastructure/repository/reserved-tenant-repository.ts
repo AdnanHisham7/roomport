@@ -1,5 +1,5 @@
 import { IReservedTenant } from "../../domain/entities/ReservedTenant";
-import { IReservedTenantRepository } from "../../domain/repository/reserved-tenant-repository-impl";
+import { IReservedTenantRepository } from "../../domain/repository/reserved-tenant-repository.interface";
 import { ReservedTenantModel } from "../db/model/reserved-tenant-model";
 
 export class ReservedTenantRepository implements IReservedTenantRepository {

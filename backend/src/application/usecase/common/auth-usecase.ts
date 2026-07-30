@@ -1,10 +1,10 @@
 import { logger } from "../../../shared/logger/logger";
 import bcrypt from "bcryptjs";
-import { IAuthUseCases } from "../../interface/common/auth-usecase.impl";
-import { IUserRepository } from "../../../domain/repository/user-repository-impl";
-import { IJwtService } from "../../interface/common/jwt-service-usecase.impl";
-import { IEmailService } from "../../interface/common/email-service-usecase.impl";
-import { IOtpService } from "../../interface/common/otp-servie-usecase.impl";
+import { IAuthUseCases } from "../../interface/common/auth-usecase.interface";
+import { IUserRepository } from "../../../domain/repository/user-repository.interface";
+import { IJwtService } from "../../interface/common/jwt-service-usecase.interface";
+import { IEmailService } from "../../interface/common/email-service-usecase.interface";
+import { IOtpService } from "../../interface/common/otp-service-usecase.interface";
 import {
   ForgotPasswordRequestDTO,
   LoginRequestDTO,
@@ -16,7 +16,7 @@ import {
   SendOtpRequestDTO,
   ValidateOtpRequestDTO,
   VerifyEmailRequestDTO,
-} from "../../dtos/user-usecaase/authdto";
+} from "../../dtos/user-usecase/auth.dto";
 import {
   BadRequestError,
   ForbiddenError,

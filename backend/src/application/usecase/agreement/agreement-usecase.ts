@@ -14,10 +14,10 @@ import {
   VerifySigningOtpDTO,
   ViewAgreementDTO,
 } from "../../dtos/agreement/agreement.dto";
-import { IAgreementUseCases } from "../../interface/agreement/agreement-usecase.impl";
-import { IAgreementRepository } from "../../../domain/repository/agreement-repository-impl";
-import { ITenantRepository } from "../../../domain/repository/tenant-repository-impl";
-import { IDocumentRepository } from "../../../domain/repository/documet-repository.impl";
+import { IAgreementUseCases } from "../../interface/agreement/agreement-usecase.interface";
+import { IAgreementRepository } from "../../../domain/repository/agreement-repository.interface";
+import { ITenantRepository } from "../../../domain/repository/tenant-repository.interface";
+import { IDocumentRepository } from "../../../domain/repository/document-repository.interface";
 import { EmailService } from "../../../infrastructure/services/email-service";
 import { PdfService } from "../../../infrastructure/services/pdf-service";
 import {

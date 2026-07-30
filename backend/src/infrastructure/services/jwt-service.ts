@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import type {
   IJwtService,
   TokenPayload,
-} from "../../application/interface/common/jwt-service-usecase.impl";
+} from "../../application/interface/common/jwt-service-usecase.interface";
 import { UnauthorizedError } from "../../shared/error/app-error";
 
 export class JwtService implements IJwtService {

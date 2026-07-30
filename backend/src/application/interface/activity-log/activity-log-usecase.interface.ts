@@ -1,5 +1,5 @@
 import { IActivityLog } from "../../../domain/entities/ActivityLog";
-import { IActivityLogRepository } from "../../../domain/repository/activity-log-repository";
+import { IActivityLogRepository } from "../../../domain/repository/activity-log-repository.interface";
 import { IActivityLogUsecase } from "../../usecase/activity-log/activity-log-usecase";
 
 export class ActivityLogUsecaseImpl implements IActivityLogUsecase {

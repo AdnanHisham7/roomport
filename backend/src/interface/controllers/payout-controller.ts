@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { AppError } from "../../shared/error/app-error";
-import { IPayoutUseCases } from "../../application/interface/payout/payout-usecase.impl";
+import { IPayoutUseCases } from "../../application/interface/payout/payout-usecase.interface";
 
 export class PayoutController {
   constructor(private readonly payoutUseCases: IPayoutUseCases) {}

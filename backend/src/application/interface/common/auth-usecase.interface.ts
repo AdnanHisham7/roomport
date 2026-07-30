@@ -9,7 +9,7 @@ import type {
   SendOtpRequestDTO,
   VerifyEmailRequestDTO,
   ValidateOtpRequestDTO,
-} from "../../dtos/user-usecaase/authdto";
+} from "../../dtos/user-usecase/auth.dto";
 
 export interface IAuthUseCases {
   login(data: LoginRequestDTO): Promise<LoginResponseDTO>;

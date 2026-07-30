@@ -1,5 +1,5 @@
 import { IPlatformSetting } from "../../domain/entities/PlatformSetting";
-import { IPlatformSettingRepository } from "../../domain/repository/platform-setting-repository-impl";
+import { IPlatformSettingRepository } from "../../domain/repository/platform-setting-repository.interface";
 import { PlatformSettingModel } from "../db/model/platform-setting-model";
 
 export class PlatformSettingRepository implements IPlatformSettingRepository {

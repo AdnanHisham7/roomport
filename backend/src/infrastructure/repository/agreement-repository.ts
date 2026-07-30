@@ -1,5 +1,5 @@
 import { AgreementStatus, IAgreement } from "../../domain/entities/Agreement";
-import { IAgreementRepository } from "../../domain/repository/agreement-repository-impl";
+import { IAgreementRepository } from "../../domain/repository/agreement-repository.interface";
 import { AgreementModel } from "../db/model/agreement-model";
 
 export class AgreementRepository implements IAgreementRepository {

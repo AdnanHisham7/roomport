@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import { TokenPayload } from "../../application/interface/common/jwt-service-usecase.impl";
+import { TokenPayload } from "../../application/interface/common/jwt-service-usecase.interface";
 import { JwtService } from "../../infrastructure/services/jwt-service";
 
 declare global {

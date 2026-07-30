@@ -1,7 +1,7 @@
 import { env } from "../config/env";
 import { logger } from "../../shared/logger/logger";
 import { Redis } from "ioredis";
-import { IOtpService } from "../../application/interface/common/otp-servie-usecase.impl";
+import { IOtpService } from "../../application/interface/common/otp-service-usecase.interface";
 
 const OTP_TTL_SECONDS = parseInt(process.env.OTP_TTL_SECONDS || "600", 10);
 

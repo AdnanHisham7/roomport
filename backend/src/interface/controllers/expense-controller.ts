@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import { AppError } from "../../shared/error/app-error";
-import { IExpenseUseCases } from "../../application/interface/expense/expense-usecase.impl";
-import { IBuildingAccessUseCase } from "../../application/interface/building/building-access-usecase.impl";
+import { IExpenseUseCases } from "../../application/interface/expense/expense-usecase.interface";
+import { IBuildingAccessUseCase } from "../../application/interface/building/building-access-usecase.interface";
 
 export class ExpenseController {
   constructor(

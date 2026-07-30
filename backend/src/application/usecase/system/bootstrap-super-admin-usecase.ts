@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
-import { IBootstrapUseCase } from "../../interface/common/bootstrap-usecase.impl";
-import { IUserRepository } from "../../../domain/repository/user-repository-impl";
+import { IBootstrapUseCase } from "../../interface/common/bootstrap-usecase.interface";
+import { IUserRepository } from "../../../domain/repository/user-repository.interface";
 import {
   BootstrapRequestDTO,
   BootstrapResponseDTO,

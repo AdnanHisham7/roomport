@@ -2,7 +2,7 @@ import type { IBuilding } from "../../domain/entities/Building";
 import type {
   IBuildingRepository,
   BuildingListFilter,
-} from "../../domain/repository/building-repository-impl";
+} from "../../domain/repository/building-repository.interface";
 import { BuildingModel } from "../db/model/building-model";
 import mongoose from "mongoose";
 

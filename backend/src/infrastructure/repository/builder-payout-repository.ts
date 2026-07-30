@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { IBuilderPayout } from "../../domain/entities/BuilderPayout";
-import { IBuilderPayoutRepository } from "../../domain/repository/builder-payout-repository-impl";
+import { IBuilderPayoutRepository } from "../../domain/repository/builder-payout-repository.interface";
 import { BuilderPayoutModel } from "../db/model/builder-payout-model";
 
 export class BuilderPayoutRepository implements IBuilderPayoutRepository {

@@ -2,7 +2,7 @@ import type { DocumentType } from "../../../domain/entities/Document";
 import {
   CreateDocumentDTO,
   DocumentResponseDTO,
-} from "../../dtos/document/document-dto";
+} from "../../dtos/document/document.dto";
 
 export interface IDocumentUseCases {
   create(data: CreateDocumentDTO): Promise<DocumentResponseDTO>;

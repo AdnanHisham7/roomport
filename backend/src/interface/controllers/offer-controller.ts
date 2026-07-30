@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { AppError } from "../../shared/error/app-error";
-import { IOfferUseCases } from "../../application/interface/offer/offer-usecase.impl";
+import { IOfferUseCases } from "../../application/interface/offer/offer-usecase.interface";
 
 export class OfferController {
   constructor(private readonly offerUseCases: IOfferUseCases) {}

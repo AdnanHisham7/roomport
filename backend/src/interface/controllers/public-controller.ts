@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { IPublicUseCases } from "../../application/interface/public/public-usecase.impl";
+import { IPublicUseCases } from "../../application/interface/public/public-usecase.interface";
 import { AppError } from "../../shared/error/app-error";
 
 export class PublicController {

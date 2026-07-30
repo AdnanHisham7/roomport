@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { AppError } from "../../shared/error/app-error";
-import { ITenantPortalUseCases } from "../../application/interface/tenant-portal/tenant-portal-usecase.impl";
+import { ITenantPortalUseCases } from "../../application/interface/tenant-portal/tenant-portal-usecase.interface";
 
 export class TenantPortalController {
   constructor(private readonly tenantPortalUseCases: ITenantPortalUseCases) {}

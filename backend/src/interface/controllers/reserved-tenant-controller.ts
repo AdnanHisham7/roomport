@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { AppError } from "../../shared/error/app-error";
-import { IReservedTenantUseCases } from "../../application/interface/reserved-tenant/reserved-tenant-usecase.impl";
+import { IReservedTenantUseCases } from "../../application/interface/reserved-tenant/reserved-tenant-usecase.interface";
 
 export class ReservedTenantController {
   constructor(

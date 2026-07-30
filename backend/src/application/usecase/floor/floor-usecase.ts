@@ -1,6 +1,6 @@
 import { IFloor } from "../../../domain/entities/Floor";
-import { IBuildingRepository } from "../../../domain/repository/building-repository-impl";
-import { IFloorRepository } from "../../../domain/repository/floor-repository-impl";
+import { IBuildingRepository } from "../../../domain/repository/building-repository.interface";
+import { IFloorRepository } from "../../../domain/repository/floor-repository.interface";
 import {
   BadRequestError,
   ForbiddenError,
@@ -12,10 +12,10 @@ import {
   FloorResponseDTO,
   UpdateFloorDTO,
 } from "../../dtos/floor/floor.dto";
-import { IFloorUseCases } from "../../interface/floor/floor-usecase.impl";
-import { IUnitUseCases } from "../../interface/unit/unit-usecase-impl";
-import { IUnitRepository } from "../../../domain/repository/unit-repository-impl";
-import { ISubscriptionRepository } from "../../../domain/repository/subscription-repository-impl";
+import { IFloorUseCases } from "../../interface/floor/floor-usecase.interface";
+import { IUnitUseCases } from "../../interface/unit/unit-usecase.interface";
+import { IUnitRepository } from "../../../domain/repository/unit-repository.interface";
+import { ISubscriptionRepository } from "../../../domain/repository/subscription-repository.interface";
 
 function toResponse(f: IFloor): FloorResponseDTO {
   return {

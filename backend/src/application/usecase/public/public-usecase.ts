@@ -1,7 +1,7 @@
-import { IBuildingRepository } from "../../../domain/repository/building-repository-impl";
-import { IUnitRepository } from "../../../domain/repository/unit-repository-impl";
-import { IFloorRepository } from "../../../domain/repository/floor-repository-impl";
-import { IOfferRepository } from "../../../domain/repository/offer-repository-impl";
+import { IBuildingRepository } from "../../../domain/repository/building-repository.interface";
+import { IUnitRepository } from "../../../domain/repository/unit-repository.interface";
+import { IFloorRepository } from "../../../domain/repository/floor-repository.interface";
+import { IOfferRepository } from "../../../domain/repository/offer-repository.interface";
 import { IOffer } from "../../../domain/entities/Offer";
 import {
   BadRequestError,
@@ -10,7 +10,7 @@ import {
 import {
   IPublicUseCases,
   PublicBuildingListFilter,
-} from "../../interface/public/public-usecase.impl";
+} from "../../interface/public/public-usecase.interface";
 import {
   PublicBuildingCardDTO,
   PublicBuildingDetailDTO,

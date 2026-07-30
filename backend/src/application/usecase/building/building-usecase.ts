@@ -1,15 +1,15 @@
 import { logger } from "../../../shared/logger/logger";
 import { IBuilding, generateSlug } from "../../../domain/entities/Building";
-import { IBuildingRepository } from "../../../domain/repository/building-repository-impl";
-import { IFloorUseCases } from "../../interface/floor/floor-usecase.impl";
-import { IBuildingUseCases } from "../../interface/building/building-usecase.impl";
+import { IBuildingRepository } from "../../../domain/repository/building-repository.interface";
+import { IFloorUseCases } from "../../interface/floor/floor-usecase.interface";
+import { IBuildingUseCases } from "../../interface/building/building-usecase.interface";
 import {
   BadRequestError,
   ForbiddenError,
   NotFoundError,
   PaymentRequiredError,
 } from "../../../shared/error/app-error";
-import { ISubscriptionRepository } from "../../../domain/repository/subscription-repository-impl";
+import { ISubscriptionRepository } from "../../../domain/repository/subscription-repository.interface";
 import {
   BuildingOccupancyStatsDTO,
   BuildingResponseDTO,
@@ -21,7 +21,7 @@ import {
   ActivityLogAction,
   ActivityLogEntityType,
 } from "../../../domain/entities/ActivityLog";
-import { IUnitRepository } from "../../../domain/repository/unit-repository-impl";
+import { IUnitRepository } from "../../../domain/repository/unit-repository.interface";
 
 function toResponse(b: IBuilding): BuildingResponseDTO {
   return {

@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
-import { IAgreementUseCases } from "../../application/interface/agreement/agreement-usecase.impl";
+import { IAgreementUseCases } from "../../application/interface/agreement/agreement-usecase.interface";
 import { AppError } from "../../shared/error/app-error";
-import { IBuildingAccessUseCase } from "../../application/interface/building/building-access-usecase.impl";
+import { IBuildingAccessUseCase } from "../../application/interface/building/building-access-usecase.interface";
 
 export class AgreementController {
   constructor(

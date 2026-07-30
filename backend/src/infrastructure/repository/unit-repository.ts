@@ -1,5 +1,5 @@
 import { IUnit } from "../../domain/entities/Unit";
-import { IUnitRepository } from "../../domain/repository/unit-repository-impl";
+import { IUnitRepository } from "../../domain/repository/unit-repository.interface";
 import { AgreementModel } from "../db/model/agreement-model";
 import { UnitModel } from "../db/model/unit-model";
 

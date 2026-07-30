@@ -2,7 +2,7 @@ import { IBooking } from "../../domain/entities/Booking";
 import {
   BookingListFilter,
   IBookingRepository,
-} from "../../domain/repository/booking-repository-impl";
+} from "../../domain/repository/booking-repository.interface";
 import { BookingModel } from "../db/model/booking-model";
 
 export class BookingRepository implements IBookingRepository {

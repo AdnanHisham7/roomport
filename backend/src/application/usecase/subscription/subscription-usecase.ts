@@ -1,7 +1,7 @@
 import { env } from "../../../infrastructure/config/env";
 import { logger } from "../../../shared/logger/logger";
-import { ISubscriptionRepository } from "../../../domain/repository/subscription-repository-impl";
-import { IPlatformSettingRepository } from "../../../domain/repository/platform-setting-repository-impl";
+import { ISubscriptionRepository } from "../../../domain/repository/subscription-repository.interface";
+import { IPlatformSettingRepository } from "../../../domain/repository/platform-setting-repository.interface";
 import {
   ISubscription,
   ISubscriptionPeriod,
@@ -20,7 +20,7 @@ import {
   DemoRequestDTO,
   UpgradeRequestDTO,
 } from "../../dtos/subscription/subscription.dto";
-import { IUserRepository } from "../../../domain/repository/user-repository-impl";
+import { IUserRepository } from "../../../domain/repository/user-repository.interface";
 import { IActivityLogUsecase } from "../activity-log/activity-log-usecase";
 import {
   ActivityLogAction,
@@ -32,7 +32,7 @@ import {
   UpgradeRequestModel,
   IUpgradeRequest,
 } from "../../../infrastructure/db/model/upgrade-request-model";
-import type { IEmailService } from "../../interface/common/email-service-usecase.impl";
+import type { IEmailService } from "../../interface/common/email-service-usecase.interface";
 
 function toResponse(s: ISubscription): SubscriptionResponseDTO {
   return {

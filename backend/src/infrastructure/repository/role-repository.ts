@@ -1,5 +1,5 @@
 import type { IRole } from "../../domain/entities/Role";
-import type { IRoleRepository } from "../../domain/repository/role-repository-impl";
+import type { IRoleRepository } from "../../domain/repository/role-repository.interface";
 import { RoleModel } from "../db/model/role-model";
 
 export class RoleRepository implements IRoleRepository {

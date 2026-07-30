@@ -4,14 +4,14 @@ import {
   NotificationType,
   NotificationChannel,
 } from "../../../domain/entities/Notification";
-import { INotificationRepository } from "../../../domain/repository/notification-repository";
+import { INotificationRepository } from "../../../domain/repository/notification-repository.interface";
 import {
   INotificationUseCase,
   SendMultiChannelNotificationDTO,
-} from "../../interface/common/notification-usecase.impl";
-import { IEmailService } from "../../interface/common/email-service-usecase.impl";
+} from "../../interface/common/notification-usecase.interface";
+import { IEmailService } from "../../interface/common/email-service-usecase.interface";
 import { ISmsService } from "../../interface/common/sms-service.interface";
-import { IUserRepository } from "../../../domain/repository/user-repository-impl";
+import { IUserRepository } from "../../../domain/repository/user-repository.interface";
 
 export class NotificationUseCase implements INotificationUseCase {
   constructor(

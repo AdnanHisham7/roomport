@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { IInquiryUseCases } from "../../application/interface/inquiry/inquiry-usecase.impl";
+import { IInquiryUseCases } from "../../application/interface/inquiry/inquiry-usecase.interface";
 import { AppError } from "../../shared/error/app-error";
 
 export class InquiryController {

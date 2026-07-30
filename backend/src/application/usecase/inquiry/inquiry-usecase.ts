@@ -1,13 +1,13 @@
 import { logger } from "../../../shared/logger/logger";
-import { IInquiryRepository } from "../../../domain/repository/inquiry-repository-impl";
-import { IBuildingRepository } from "../../../domain/repository/building-repository-impl";
-import { IUnitRepository } from "../../../domain/repository/unit-repository-impl";
-import { INotificationUseCase } from "../../interface/common/notification-usecase.impl";
+import { IInquiryRepository } from "../../../domain/repository/inquiry-repository.interface";
+import { IBuildingRepository } from "../../../domain/repository/building-repository.interface";
+import { IUnitRepository } from "../../../domain/repository/unit-repository.interface";
+import { INotificationUseCase } from "../../interface/common/notification-usecase.interface";
 import {
   CreateInquiryDTO,
   InquiryResponseDTO,
 } from "../../dtos/inquiry/inquiry.dto";
-import { IInquiryUseCases } from "../../interface/inquiry/inquiry-usecase.impl";
+import { IInquiryUseCases } from "../../interface/inquiry/inquiry-usecase.interface";
 import {
   BadRequestError,
   ForbiddenError,

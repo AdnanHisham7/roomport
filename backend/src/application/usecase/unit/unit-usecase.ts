@@ -1,6 +1,6 @@
 import { logger } from "../../../shared/logger/logger";
-import { IUnitRepository } from "../../../domain/repository/unit-repository-impl";
-import { IFloorRepository } from "../../../domain/repository/floor-repository-impl";
+import { IUnitRepository } from "../../../domain/repository/unit-repository.interface";
+import { IFloorRepository } from "../../../domain/repository/floor-repository.interface";
 import {
   CreateUnitDTO,
   UnitResponseDTO,
@@ -9,9 +9,9 @@ import {
 import {
   CreateUnitOptions,
   IUnitUseCases,
-} from "../../interface/unit/unit-usecase-impl";
-import { ISubscriptionRepository } from "../../../domain/repository/subscription-repository-impl";
-import { IBuildingRepository } from "../../../domain/repository/building-repository-impl";
+} from "../../interface/unit/unit-usecase.interface";
+import { ISubscriptionRepository } from "../../../domain/repository/subscription-repository.interface";
+import { IBuildingRepository } from "../../../domain/repository/building-repository.interface";
 import {
   PaymentRequiredError,
   NotFoundError,

@@ -2,13 +2,13 @@ import type {
   DocumentType,
   IDocument,
 } from "../../../domain/entities/Document";
-import { IDocumentRepository } from "../../../domain/repository/documet-repository.impl";
+import { IDocumentRepository } from "../../../domain/repository/document-repository.interface";
 import { NotFoundError } from "../../../shared/error/app-error";
 import {
   CreateDocumentDTO,
   DocumentResponseDTO,
-} from "../../dtos/document/document-dto";
-import { IDocumentUseCases } from "../../interface/document/document-usecase-impl";
+} from "../../dtos/document/document.dto";
+import { IDocumentUseCases } from "../../interface/document/document-usecase.interface";
 
 function toResponse(d: IDocument): DocumentResponseDTO {
   return {

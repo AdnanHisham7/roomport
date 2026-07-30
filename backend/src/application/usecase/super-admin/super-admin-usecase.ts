@@ -1,12 +1,12 @@
 import { logger } from "../../../shared/logger/logger";
-import { IUserRepository } from "../../../domain/repository/user-repository-impl";
-import { IBuildingRepository } from "../../../domain/repository/building-repository-impl";
-import { ISubscriptionRepository } from "../../../domain/repository/subscription-repository-impl";
-import { IUnitRepository } from "../../../domain/repository/unit-repository-impl";
-import { IInquiryRepository } from "../../../domain/repository/inquiry-repository-impl";
-import { IPlatformSettingRepository } from "../../../domain/repository/platform-setting-repository-impl";
+import { IUserRepository } from "../../../domain/repository/user-repository.interface";
+import { IBuildingRepository } from "../../../domain/repository/building-repository.interface";
+import { ISubscriptionRepository } from "../../../domain/repository/subscription-repository.interface";
+import { IUnitRepository } from "../../../domain/repository/unit-repository.interface";
+import { IInquiryRepository } from "../../../domain/repository/inquiry-repository.interface";
+import { IPlatformSettingRepository } from "../../../domain/repository/platform-setting-repository.interface";
 import { IActivityLogUsecase } from "../activity-log/activity-log-usecase";
-import { ISuperAdminUseCases } from "../../interface/super-admin/super-admin-usecase.impl";
+import { ISuperAdminUseCases } from "../../interface/super-admin/super-admin-usecase.interface";
 import {
   BuilderDetailDTO,
   BuilderListItemDTO,
@@ -30,7 +30,7 @@ import {
   ActivityLogAction,
   ActivityLogEntityType,
 } from "../../../domain/entities/ActivityLog";
-import { IEmailService } from "../../interface/common/email-service-usecase.impl";
+import { IEmailService } from "../../interface/common/email-service-usecase.interface";
 import bcrypt from "bcrypt";
 
 function toSubscriptionResponse(s: ISubscription): SubscriptionResponseDTO {

@@ -3,7 +3,7 @@ import type {
   CreateFloorDTO,
   UpdateFloorDTO,
 } from "../../application/dtos/floor/floor.dto";
-import { IFloorUseCases } from "../../application/interface/floor/floor-usecase.impl";
+import { IFloorUseCases } from "../../application/interface/floor/floor-usecase.interface";
 import { AppError } from "../../shared/error/app-error";
 
 export class FloorController {

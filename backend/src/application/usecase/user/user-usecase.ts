@@ -1,7 +1,7 @@
 import { IUser } from "../../../domain/entities/User";
-import { IUserRepository } from "../../../domain/repository/user-repository-impl";
+import { IUserRepository } from "../../../domain/repository/user-repository.interface";
 import { AppError } from "../../../shared/error/app-error";
-import { IUserUseCase } from "../../interface/user/user-usecase.impl";
+import { IUserUseCase } from "../../interface/user/user-usecase.interface";
 
 function sanitize(user: IUser): IUser {
   const { password, refresh_token, ...rest } = user;

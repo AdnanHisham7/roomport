@@ -1,6 +1,6 @@
 import { env } from "../config/env";
 import nodemailer from "nodemailer";
-import { IEmailService } from "../../application/interface/common/email-service-usecase.impl";
+import { IEmailService } from "../../application/interface/common/email-service-usecase.interface";
 import { OtpPurpose } from "../../shared/enums/OtpPurpose.enum";
 import { logger } from "../../shared/logger/logger";
 

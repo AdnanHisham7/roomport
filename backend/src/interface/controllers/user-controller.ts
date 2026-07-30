@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { IUserUseCase } from "../../application/interface/user/user-usecase.impl";
+import { IUserUseCase } from "../../application/interface/user/user-usecase.interface";
 import { AppError } from "../../shared/error/app-error";
 
 export class UserController {

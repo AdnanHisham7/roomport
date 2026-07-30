@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { ITenantUseCases } from "../../application/interface/tenant/tenant-usecase-impl";
+import { ITenantUseCases } from "../../application/interface/tenant/tenant-usecase.interface";
 import { AppError } from "../../shared/error/app-error";
 
 export class TenantController {

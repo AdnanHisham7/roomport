@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { IUnitUseCases } from "../../application/interface/unit/unit-usecase-impl";
+import { IUnitUseCases } from "../../application/interface/unit/unit-usecase.interface";
 
 export class UnitController {
   constructor(private readonly unitUseCases: IUnitUseCases) {}

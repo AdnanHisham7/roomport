@@ -2,7 +2,7 @@ import { IOffer } from "../../domain/entities/Offer";
 import {
   IOfferRepository,
   OfferListFilter,
-} from "../../domain/repository/offer-repository-impl";
+} from "../../domain/repository/offer-repository.interface";
 import { OfferModel } from "../db/model/offer-model";
 
 export class OfferRepository implements IOfferRepository {

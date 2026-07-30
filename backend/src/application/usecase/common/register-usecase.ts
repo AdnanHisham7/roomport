@@ -1,13 +1,13 @@
 import { logger } from "../../../shared/logger/logger";
 import bcrypt from "bcryptjs";
-import { IRegisterUseCase } from "../../interface/common/register-usecase.impl";
-import { IUserRepository } from "../../../domain/repository/user-repository-impl";
-import { IEmailService } from "../../interface/common/email-service-usecase.impl";
-import { IOtpService } from "../../interface/common/otp-servie-usecase.impl";
+import { IRegisterUseCase } from "../../interface/common/register-usecase.interface";
+import { IUserRepository } from "../../../domain/repository/user-repository.interface";
+import { IEmailService } from "../../interface/common/email-service-usecase.interface";
+import { IOtpService } from "../../interface/common/otp-service-usecase.interface";
 import {
   RegisterRequestDTO,
   RegisterResponseDTO,
-} from "../../dtos/user-usecaase/register.dto";
+} from "../../dtos/user-usecase/register.dto";
 import { BadRequestError } from "../../../shared/error/app-error";
 import { OtpPurpose } from "../../../shared/enums/OtpPurpose.enum";
 

@@ -3,7 +3,7 @@ import { IPlatformTransaction } from "../../domain/entities/PlatformTransaction"
 import {
   IPlatformTransactionRepository,
   PlatformTransactionFilter,
-} from "../../domain/repository/platform-transaction-repository-impl";
+} from "../../domain/repository/platform-transaction-repository.interface";
 import { PlatformTransactionModel } from "../db/model/platform-transaction-model";
 
 export class PlatformTransactionRepository implements IPlatformTransactionRepository {

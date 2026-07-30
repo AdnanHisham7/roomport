@@ -4,7 +4,7 @@ import {
   NotificationChannel,
   ICreateNotification,
 } from "../../domain/entities/Notification";
-import { INotificationRepository } from "../../domain/repository/notification-repository";
+import { INotificationRepository } from "../../domain/repository/notification-repository.interface";
 import { NotificationModel } from "../db/model/notification-model";
 
 export class NotificationRepositoryImpl implements INotificationRepository {

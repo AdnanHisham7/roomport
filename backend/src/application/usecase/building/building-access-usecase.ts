@@ -1,6 +1,6 @@
-import { IBuildingRepository } from "../../../domain/repository/building-repository-impl";
+import { IBuildingRepository } from "../../../domain/repository/building-repository.interface";
 import { ForbiddenError } from "../../../shared/error/app-error";
-import { IBuildingAccessUseCase } from "../../interface/building/building-access-usecase.impl";
+import { IBuildingAccessUseCase } from "../../interface/building/building-access-usecase.interface";
 
 export class BuildingAccessUseCase implements IBuildingAccessUseCase {
   constructor(private readonly buildingRepo: IBuildingRepository) {}

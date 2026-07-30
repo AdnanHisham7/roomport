@@ -2,9 +2,9 @@ import { logger } from "../../../shared/logger/logger";
 import Stripe from "stripe";
 import bcrypt from "bcryptjs";
 import { IStripeService } from "../../interface/common/stripe-service.interface";
-import { IUserRepository } from "../../../domain/repository/user-repository-impl";
-import { ISubscriptionRepository } from "../../../domain/repository/subscription-repository-impl";
-import { IEmailService } from "../../interface/common/email-service-usecase.impl";
+import { IUserRepository } from "../../../domain/repository/user-repository.interface";
+import { ISubscriptionRepository } from "../../../domain/repository/subscription-repository.interface";
+import { IEmailService } from "../../interface/common/email-service-usecase.interface";
 
 export class HandleWebhookUseCase {
   constructor(

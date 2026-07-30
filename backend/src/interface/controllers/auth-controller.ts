@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import type { IAuthUseCases } from "../../application/interface/common/auth-usecase.impl";
-import type { IRegisterUseCase } from "../../application/interface/common/register-usecase.impl";
+import type { IAuthUseCases } from "../../application/interface/common/auth-usecase.interface";
+import type { IRegisterUseCase } from "../../application/interface/common/register-usecase.interface";
 import { AppError } from "../../shared/error/app-error";
 import type {
   registerSchema,

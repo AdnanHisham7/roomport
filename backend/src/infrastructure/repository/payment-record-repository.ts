@@ -1,6 +1,6 @@
 import { PaymentRecordModel } from "../db/model/payment-record-model";
 import { IPaymentRecord } from "../../domain/entities/PaymentRecord";
-import { IPaymentRecordRepository } from "../../domain/repository/payment-record-repository-impl";
+import { IPaymentRecordRepository } from "../../domain/repository/payment-record-repository.interface";
 
 export class PaymentRecordRepository implements IPaymentRecordRepository {
   private toEntity(doc: any): IPaymentRecord {

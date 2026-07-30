@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { AppError } from "../../shared/error/app-error";
-import { IPaymentRecordUseCases } from "../../application/interface/payment-record/payment-record-usecase.impl";
+import { IPaymentRecordUseCases } from "../../application/interface/payment-record/payment-record-usecase.interface";
 
 export class PaymentRecordController {
   constructor(private readonly paymentRecordUseCases: IPaymentRecordUseCases) {}

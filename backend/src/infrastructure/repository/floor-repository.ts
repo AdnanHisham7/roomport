@@ -1,5 +1,5 @@
 import type { IFloor } from "../../domain/entities/Floor";
-import type { IFloorRepository } from "../../domain/repository/floor-repository-impl";
+import type { IFloorRepository } from "../../domain/repository/floor-repository.interface";
 import { FloorModel } from "../db/model/floor-model";
 
 export class FloorRepository implements IFloorRepository {

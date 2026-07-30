@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { IAnalyticsRepository } from "../../domain/repository/analytics-repository-impl";
+import { IAnalyticsRepository } from "../../domain/repository/analytics-repository.interface";
 import {
   DashboardMetricsDTO,
   AnalyticsTrendsDTO,

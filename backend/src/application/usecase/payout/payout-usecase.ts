@@ -1,7 +1,7 @@
-import { IUserRepository } from "../../../domain/repository/user-repository-impl";
-import { IPlatformTransactionRepository } from "../../../domain/repository/platform-transaction-repository-impl";
-import { IBuilderPayoutRepository } from "../../../domain/repository/builder-payout-repository-impl";
-import { IPlatformSettingRepository } from "../../../domain/repository/platform-setting-repository-impl";
+import { IUserRepository } from "../../../domain/repository/user-repository.interface";
+import { IPlatformTransactionRepository } from "../../../domain/repository/platform-transaction-repository.interface";
+import { IBuilderPayoutRepository } from "../../../domain/repository/builder-payout-repository.interface";
+import { IPlatformSettingRepository } from "../../../domain/repository/platform-setting-repository.interface";
 import { BadRequestError, NotFoundError } from "../../../shared/error/app-error";
 import { IPlatformTransaction } from "../../../domain/entities/PlatformTransaction";
 import {
@@ -11,7 +11,7 @@ import {
   PlatformSummaryDTO,
   PlatformTransactionResponseDTO,
 } from "../../dtos/payout/payout.dto";
-import { IPayoutUseCases } from "../../interface/payout/payout-usecase.impl";
+import { IPayoutUseCases } from "../../interface/payout/payout-usecase.interface";
 
 const DEFAULT_COMMISSION_RATE = 10;
 

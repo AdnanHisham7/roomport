@@ -6,12 +6,12 @@ import {
   NotFoundError,
 } from "../../../shared/error/app-error";
 import { IBooking, BookingStatus } from "../../../domain/entities/Booking";
-import { IBookingRepository } from "../../../domain/repository/booking-repository-impl";
-import { IBuildingRepository } from "../../../domain/repository/building-repository-impl";
-import { IUnitRepository } from "../../../domain/repository/unit-repository-impl";
-import { IPlatformTransactionRepository } from "../../../domain/repository/platform-transaction-repository-impl";
-import { IPlatformSettingRepository } from "../../../domain/repository/platform-setting-repository-impl";
-import { IReservedTenantRepository } from "../../../domain/repository/reserved-tenant-repository-impl";
+import { IBookingRepository } from "../../../domain/repository/booking-repository.interface";
+import { IBuildingRepository } from "../../../domain/repository/building-repository.interface";
+import { IUnitRepository } from "../../../domain/repository/unit-repository.interface";
+import { IPlatformTransactionRepository } from "../../../domain/repository/platform-transaction-repository.interface";
+import { IPlatformSettingRepository } from "../../../domain/repository/platform-setting-repository.interface";
+import { IReservedTenantRepository } from "../../../domain/repository/reserved-tenant-repository.interface";
 import {
   ActivityLogAction,
   ActivityLogEntityType,
@@ -21,8 +21,8 @@ import {
   NotificationType,
 } from "../../../domain/entities/Notification";
 import { IActivityLogUsecase } from "../activity-log/activity-log-usecase";
-import { INotificationUseCase } from "../../interface/common/notification-usecase.impl";
-import { IEmailService } from "../../interface/common/email-service-usecase.impl";
+import { INotificationUseCase } from "../../interface/common/notification-usecase.interface";
+import { IEmailService } from "../../interface/common/email-service-usecase.interface";
 import { IRazorpayService } from "../../interface/common/razorpay-service.interface";
 import {
   BookingResponseDTO,
@@ -30,7 +30,7 @@ import {
   CreateBookingResultDTO,
   VerifyBookingPaymentDTO,
 } from "../../dtos/booking/booking.dto";
-import { IBookingUseCases } from "../../interface/booking/booking-usecase.impl";
+import { IBookingUseCases } from "../../interface/booking/booking-usecase.interface";
 
 function toResponse(b: IBooking): BookingResponseDTO {
   return {

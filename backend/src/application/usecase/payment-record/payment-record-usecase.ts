@@ -1,6 +1,6 @@
 import { logger } from "../../../shared/logger/logger";
-import { IPaymentRecordRepository } from "../../../domain/repository/payment-record-repository-impl";
-import { ITenantRepository } from "../../../domain/repository/tenant-repository-impl";
+import { IPaymentRecordRepository } from "../../../domain/repository/payment-record-repository.interface";
+import { ITenantRepository } from "../../../domain/repository/tenant-repository.interface";
 import { IPaymentRecord } from "../../../domain/entities/PaymentRecord";
 import {
   ActivityLogAction,
@@ -11,13 +11,13 @@ import {
   NotFoundError,
 } from "../../../shared/error/app-error";
 import { IActivityLogUsecase } from "../activity-log/activity-log-usecase";
-import { IBuildingAccessUseCase } from "../../interface/building/building-access-usecase.impl";
+import { IBuildingAccessUseCase } from "../../interface/building/building-access-usecase.interface";
 import {
   PaymentRecordResponseDTO,
   RecordPaymentDTO,
   UpdatePaymentRecordDTO,
 } from "../../dtos/payment-record/payment-record.dto";
-import { IPaymentRecordUseCases } from "../../interface/payment-record/payment-record-usecase.impl";
+import { IPaymentRecordUseCases } from "../../interface/payment-record/payment-record-usecase.interface";
 
 export function buildPeriod(
   rentType: string,

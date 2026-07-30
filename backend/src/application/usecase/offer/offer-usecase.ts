@@ -1,12 +1,12 @@
 import { logger } from "../../../shared/logger/logger";
-import { IOfferRepository } from "../../../domain/repository/offer-repository-impl";
-import { IUnitRepository } from "../../../domain/repository/unit-repository-impl";
-import { IBuildingRepository } from "../../../domain/repository/building-repository-impl";
+import { IOfferRepository } from "../../../domain/repository/offer-repository.interface";
+import { IUnitRepository } from "../../../domain/repository/unit-repository.interface";
+import { IBuildingRepository } from "../../../domain/repository/building-repository.interface";
 import {
   BadRequestError,
   NotFoundError,
 } from "../../../shared/error/app-error";
-import { IBuildingAccessUseCase } from "../../interface/building/building-access-usecase.impl";
+import { IBuildingAccessUseCase } from "../../interface/building/building-access-usecase.interface";
 import { IActivityLogUsecase } from "../activity-log/activity-log-usecase";
 import {
   ActivityLogAction,
@@ -18,7 +18,7 @@ import {
   OfferResponseDTO,
   UpdateOfferDTO,
 } from "../../dtos/offer/offer.dto";
-import { IOfferUseCases } from "../../interface/offer/offer-usecase.impl";
+import { IOfferUseCases } from "../../interface/offer/offer-usecase.interface";
 
 const MAX_PERCENTAGE_DISCOUNT = 90;
 

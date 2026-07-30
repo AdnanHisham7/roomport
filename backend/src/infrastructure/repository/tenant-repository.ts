@@ -1,5 +1,5 @@
 import { ITenant } from "../../domain/entities/Tenant";
-import { ITenantRepository } from "../../domain/repository/tenant-repository-impl";
+import { ITenantRepository } from "../../domain/repository/tenant-repository.interface";
 import { TenantModel } from "../db/model/tenant-model";
 
 export class TenantRepository implements ITenantRepository {

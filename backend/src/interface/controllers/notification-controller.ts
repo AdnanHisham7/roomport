@@ -1,6 +1,6 @@
 import { logger } from "../../shared/logger/logger";
 import { Request, Response } from "express";
-import { INotificationUseCase } from "../../application/interface/common/notification-usecase.impl";
+import { INotificationUseCase } from "../../application/interface/common/notification-usecase.interface";
 
 export class NotificationController {
   constructor(private notificationUseCase: INotificationUseCase) {}

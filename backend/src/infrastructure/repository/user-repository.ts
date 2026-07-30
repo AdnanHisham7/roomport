@@ -2,7 +2,7 @@ import type { IUser } from "../../domain/entities/User";
 import type {
   IUserRepository,
   UserListFilter,
-} from "../../domain/repository/user-repository-impl";
+} from "../../domain/repository/user-repository.interface";
 import { UserModel } from "../db/model/user-model";
 
 export class UserRepository implements IUserRepository {

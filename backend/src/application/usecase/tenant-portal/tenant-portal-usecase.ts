@@ -1,11 +1,11 @@
 import bcrypt from "bcryptjs";
 import { ITenant } from "../../../domain/entities/Tenant";
-import { ITenantRepository } from "../../../domain/repository/tenant-repository-impl";
-import { IUnitRepository } from "../../../domain/repository/unit-repository-impl";
-import { IBuildingRepository } from "../../../domain/repository/building-repository-impl";
-import { IPaymentRecordRepository } from "../../../domain/repository/payment-record-repository-impl";
-import { IAgreementRepository } from "../../../domain/repository/agreement-repository-impl";
-import { IDocumentRepository } from "../../../domain/repository/documet-repository.impl";
+import { ITenantRepository } from "../../../domain/repository/tenant-repository.interface";
+import { IUnitRepository } from "../../../domain/repository/unit-repository.interface";
+import { IBuildingRepository } from "../../../domain/repository/building-repository.interface";
+import { IPaymentRecordRepository } from "../../../domain/repository/payment-record-repository.interface";
+import { IAgreementRepository } from "../../../domain/repository/agreement-repository.interface";
+import { IDocumentRepository } from "../../../domain/repository/document-repository.interface";
 import {
   BadRequestError,
   ForbiddenError,
@@ -22,7 +22,7 @@ import {
   TenantPortalProfileDTO,
   TenantSetPasswordDTO,
 } from "../../dtos/tenant-portal/tenant-portal.dto";
-import { ITenantPortalUseCases } from "../../interface/tenant-portal/tenant-portal-usecase.impl";
+import { ITenantPortalUseCases } from "../../interface/tenant-portal/tenant-portal-usecase.interface";
 
 const SALT_ROUNDS = 10;
 const MIN_PASSWORD_LENGTH = 8;

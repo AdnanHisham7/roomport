@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
-import { IDocumentUseCases } from "../../application/interface/document/document-usecase-impl";
+import { IDocumentUseCases } from "../../application/interface/document/document-usecase.interface";
 import { AppError } from "../../shared/error/app-error";
-import { IBuildingAccessUseCase } from "../../application/interface/building/building-access-usecase.impl";
+import { IBuildingAccessUseCase } from "../../application/interface/building/building-access-usecase.interface";
 
 export class DocumentController {
   constructor(

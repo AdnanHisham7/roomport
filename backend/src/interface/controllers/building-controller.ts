@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { IBuildingUseCases } from "../../application/interface/building/building-usecase.impl";
+import { IBuildingUseCases } from "../../application/interface/building/building-usecase.interface";
 import type {
   CreateBuildingDTO,
   UpdateBuildingDTO,
@@ -13,7 +13,7 @@ import {
   BadRequestError,
   ForbiddenError,
 } from "../../shared/error/app-error";
-import { IUserUseCase } from "../../application/interface/user/user-usecase.impl";
+import { IUserUseCase } from "../../application/interface/user/user-usecase.interface";
 
 export class BuildingController {
   constructor(

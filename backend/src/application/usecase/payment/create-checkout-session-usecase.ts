@@ -1,7 +1,7 @@
 import { IStripeService } from "../../interface/common/stripe-service.interface";
-import { IUserRepository } from "../../../domain/repository/user-repository-impl";
-import { ISubscriptionRepository } from "../../../domain/repository/subscription-repository-impl";
-import { IPlatformSettingRepository } from "../../../domain/repository/platform-setting-repository-impl";
+import { IUserRepository } from "../../../domain/repository/user-repository.interface";
+import { ISubscriptionRepository } from "../../../domain/repository/subscription-repository.interface";
+import { IPlatformSettingRepository } from "../../../domain/repository/platform-setting-repository.interface";
 import {
   NotFoundError,
   ForbiddenError,

@@ -1,5 +1,5 @@
 import { IActivityLog } from "../../domain/entities/ActivityLog";
-import { IActivityLogRepository } from "../../domain/repository/activity-log-repository";
+import { IActivityLogRepository } from "../../domain/repository/activity-log-repository.interface";
 import { ActivityLogModel } from "../db/model/activity-log-model";
 
 export class ActivityLogRepositoryImpl implements IActivityLogRepository {

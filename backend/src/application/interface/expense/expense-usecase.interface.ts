@@ -4,7 +4,7 @@ import {
   ExpenseResponseDTO,
   ExpenseTrackerSummaryDTO,
   UpdateExpenseDTO,
-} from "../../dtos/expense/expense-dto";
+} from "../../dtos/expense/expense.dto";
 
 export interface IExpenseUseCases {
   // ── CRUD ──────────────────────────────────────────────────────────────────

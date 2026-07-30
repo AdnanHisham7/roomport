@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { AppError } from "../../shared/error/app-error";
-import { IBookingUseCases } from "../../application/interface/booking/booking-usecase.impl";
+import { IBookingUseCases } from "../../application/interface/booking/booking-usecase.interface";
 import { BookingStatus } from "../../domain/entities/Booking";
 import { logger } from "../../shared/logger/logger";
 

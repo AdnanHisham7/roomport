@@ -1,9 +1,9 @@
-import { IReservedTenantRepository } from "../../../domain/repository/reserved-tenant-repository-impl";
-import { IUnitRepository } from "../../../domain/repository/unit-repository-impl";
+import { IReservedTenantRepository } from "../../../domain/repository/reserved-tenant-repository.interface";
+import { IUnitRepository } from "../../../domain/repository/unit-repository.interface";
 import { NotFoundError } from "../../../shared/error/app-error";
-import { IBuildingAccessUseCase } from "../../interface/building/building-access-usecase.impl";
+import { IBuildingAccessUseCase } from "../../interface/building/building-access-usecase.interface";
 import { ReservedTenantResponseDTO } from "../../dtos/reserved-tenant/reserved-tenant.dto";
-import { IReservedTenantUseCases } from "../../interface/reserved-tenant/reserved-tenant-usecase.impl";
+import { IReservedTenantUseCases } from "../../interface/reserved-tenant/reserved-tenant-usecase.interface";
 import { IReservedTenant } from "../../../domain/entities/ReservedTenant";
 
 function toResponse(r: IReservedTenant): ReservedTenantResponseDTO {

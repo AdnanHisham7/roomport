@@ -1,5 +1,5 @@
 import { ExpenseCategory, IExpense } from "../../../domain/entities/Expense";
-import { IExpenseRepository } from "../../../domain/repository/expense-repository-impl";
+import { IExpenseRepository } from "../../../domain/repository/expense-repository.interface";
 import {
   BadRequestError,
   NotFoundError,
@@ -9,8 +9,8 @@ import {
   ExpenseResponseDTO,
   ExpenseTrackerSummaryDTO,
   UpdateExpenseDTO,
-} from "../../dtos/expense/expense-dto";
-import { IExpenseUseCases } from "../../interface/expense/expense-usecase.impl";
+} from "../../dtos/expense/expense.dto";
+import { IExpenseUseCases } from "../../interface/expense/expense-usecase.interface";
 
 type RentPaymentStatus = "completed" | "pending" | "failed" | "cancelled";
 type RentPaymentType =

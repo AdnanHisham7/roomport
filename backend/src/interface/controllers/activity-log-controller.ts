@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { IActivityLogUsecase } from "../../application/usecase/activity-log/activity-log-usecase";
-import { IBuildingAccessUseCase } from "../../application/interface/building/building-access-usecase.impl";
+import { IBuildingAccessUseCase } from "../../application/interface/building/building-access-usecase.interface";
 
 export class ActivityLogController {
   constructor(

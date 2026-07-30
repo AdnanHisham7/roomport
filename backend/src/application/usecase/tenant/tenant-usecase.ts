@@ -1,6 +1,6 @@
 import { logger } from "../../../shared/logger/logger";
 import { ITenant } from "../../../domain/entities/Tenant";
-import { ITenantRepository } from "../../../domain/repository/tenant-repository-impl";
+import { ITenantRepository } from "../../../domain/repository/tenant-repository.interface";
 import {
   BadRequestError,
   ForbiddenError,
@@ -11,16 +11,16 @@ import {
   TenantResponseDTO,
   UpdateTenantDTO,
 } from "../../dtos/tenant/tenant.dto";
-import { ITenantUseCases } from "../../interface/tenant/tenant-usecase-impl";
-import { IUnitRepository } from "../../../domain/repository/unit-repository-impl";
+import { ITenantUseCases } from "../../interface/tenant/tenant-usecase.interface";
+import { IUnitRepository } from "../../../domain/repository/unit-repository.interface";
 import { IActivityLogUsecase } from "../../usecase/activity-log/activity-log-usecase";
 import {
   ActivityLogAction,
   ActivityLogEntityType,
 } from "../../../domain/entities/ActivityLog";
 import { ITenantPortalTokenService } from "../../interface/common/tenant-portal-token-service.interface";
-import { IEmailService } from "../../interface/common/email-service-usecase.impl";
-import { IReservedTenantRepository } from "../../../domain/repository/reserved-tenant-repository-impl";
+import { IEmailService } from "../../interface/common/email-service-usecase.interface";
+import { IReservedTenantRepository } from "../../../domain/repository/reserved-tenant-repository.interface";
 import { env } from "../../../infrastructure/config/env";
 
 function toResponse(t: ITenant): TenantResponseDTO {

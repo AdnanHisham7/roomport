@@ -2,7 +2,7 @@ import { IInquiry } from "../../domain/entities/Inquiry";
 import {
   IInquiryRepository,
   InquiryListFilter,
-} from "../../domain/repository/inquiry-repository-impl";
+} from "../../domain/repository/inquiry-repository.interface";
 import { InquiryModel } from "../db/model/inquiry-model";
 
 export class InquiryRepository implements IInquiryRepository {

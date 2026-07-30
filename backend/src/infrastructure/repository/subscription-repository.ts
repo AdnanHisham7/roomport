@@ -5,7 +5,7 @@ import type {
 import type {
   ISubscriptionRepository,
   SubscriptionListFilter,
-} from "../../domain/repository/subscription-repository-impl";
+} from "../../domain/repository/subscription-repository.interface";
 import {
   SubscriptionModel,
   SubscriptionPeriodModel,
