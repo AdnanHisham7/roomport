@@ -20,6 +20,7 @@ import {
 } from "../../../domain/entities/ActivityLog";
 import { ITenantPortalTokenService } from "../../interface/common/tenant-portal-token-service.interface";
 import { IEmailService } from "../../interface/common/email-service-usecase.impl";
+import { IReservedTenantRepository } from "../../../domain/repository/reserved-tenant-repository-impl";
 import { env } from "../../../infrastructure/config/env";
 
 function toResponse(t: ITenant): TenantResponseDTO {
@@ -57,6 +58,7 @@ export class TenantUseCases implements ITenantUseCases {
     private readonly activityLogUc: IActivityLogUsecase,
     private readonly tenantPortalTokenService: ITenantPortalTokenService,
     private readonly emailService: IEmailService,
+    private readonly reservedTenantRepo: IReservedTenantRepository,
   ) {}
 
   async create(data: CreateTenantDTO): Promise<TenantResponseDTO> {
@@ -106,8 +108,6 @@ export class TenantUseCases implements ITenantUseCases {
       }
     }
 
-    console.log("Creating tenant with data:", data);
-
     const tenant = await this.tenantRepository.create({
       ...data,
       status: "pending",
@@ -119,6 +119,7 @@ export class TenantUseCases implements ITenantUseCases {
         isOccupied: true,
         status: "occupied",
       });
+      await this.reservedTenantRepo.deleteByUnitId(tenant.unitId);
     }
 
     this.activityLogUc
@@ -418,11 +419,7 @@ export class TenantUseCases implements ITenantUseCases {
       })
       .catch((err) => logger.error(String(err)));
 
-    if (
-      enabled &&
-      !existing.passwordSetAt &&
-      this.emailService.sendNotificationEmail
-    ) {
+    if (enabled && !existing.passwordSetAt && this.emailService.sendNotificationEmail) {
       const setupToken = this.tenantPortalTokenService.generateSetupToken(id);
       const setupLink = `${env.FRONTEND_URL}/tenant-portal/set-password?token=${setupToken}`;
       this.emailService
@@ -434,11 +431,7 @@ export class TenantUseCases implements ITenantUseCases {
         .catch((err) =>
           logger.error("Failed to email tenant portal setup link:", err),
         );
-    } else if (
-      enabled &&
-      existing.passwordSetAt &&
-      this.emailService.sendNotificationEmail
-    ) {
+    } else if (enabled && existing.passwordSetAt && this.emailService.sendNotificationEmail) {
       this.emailService
         .sendNotificationEmail(
           existing.email,

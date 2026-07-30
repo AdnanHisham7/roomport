@@ -23,6 +23,7 @@ export interface IUser {
   email_verified: boolean;
   paymentStatus: boolean;
   subscriptionId?: string;
+  payoutQrCodeUrl?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }

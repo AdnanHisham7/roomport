@@ -203,11 +203,12 @@ export class AgreementController {
   ): Promise<Response> => {
     try {
       const result = await this.agreementUseCases.initiateSigning({
-        token: req.params.token,
+        rawToken: req.params.token, // ✅ Changed 'token' to 'rawToken'
         ...req.body,
       });
       return res.status(200).json(result);
     } catch (err) {
+      console.log("Error in initiateSigning:", err);
       return this.handleError(res, err, "Failed to initiate signing.");
     }
   };
@@ -218,7 +219,7 @@ export class AgreementController {
   ): Promise<Response> => {
     try {
       const result = await this.agreementUseCases.verifySigningOtp({
-        token: req.params.token,
+        rawToken: req.params.token, // ✅ Changed 'token' to 'rawToken'
         ...req.body,
       });
       return res.status(200).json(result);

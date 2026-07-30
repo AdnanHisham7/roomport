@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { FloorSlab } from './FloorSlab';
 import { RoomDetailDrawer } from './RoomDetailDrawer';
 import { AssignTenantModal } from './AssignTenantModal';
+import { ReservedTenantModal } from './ReservedTenantModal';
 import { TransferTenantModal } from './TransferTenantModal';
 import { AddFloorModal, AddRoomModal, EditFloorModal } from './FloorRoomModals';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
@@ -34,6 +35,8 @@ export function BuildingDiagram({ buildingId, buildingName }: Props) {
   // Modals / drawers
   const [editUnit,          setEditUnit]          = useState<Unit | null>(null);
   const [assignUnit,        setAssignUnit]        = useState<Unit | null>(null);
+  const [assignPrefill, setAssignPrefill] = useState<{ firstName?: string; lastName?: string; email?: string; phone?: string } | undefined>(undefined);
+  const [reservedTenantUnit, setReservedTenantUnit] = useState<Unit | null>(null);
   const [paymentUnit,       setPaymentUnit]       = useState<Unit | null>(null);
   const [transferUnit,      setTransferUnit]      = useState<Unit | null>(null);
   const [addFloorOpen,      setAddFloorOpen]      = useState(false);
@@ -102,6 +105,8 @@ export function BuildingDiagram({ buildingId, buildingName }: Props) {
     const tenant = tenantByUnit.get(unit._id);
     if (tenant) {
       navigate(`/dashboard/tenants/${tenant._id}`);
+    } else if (unit.status === 'reserved') {
+      setReservedTenantUnit(unit);
     } else {
       toast.error('No tenant linked to this room.');
     }
@@ -165,10 +170,31 @@ export function BuildingDiagram({ buildingId, buildingName }: Props) {
       {assignUnit && (
         <AssignTenantModal
           open={!!assignUnit}
-          onClose={() => setAssignUnit(null)}
+          onClose={() => { setAssignUnit(null); setAssignPrefill(undefined); }}
           unit={assignUnit}
           buildingId={buildingId}
           buildingName={buildingName}
+          prefill={assignPrefill}
+        />
+      )}
+
+      {reservedTenantUnit && (
+        <ReservedTenantModal
+          open={!!reservedTenantUnit}
+          onClose={() => setReservedTenantUnit(null)}
+          unitId={reservedTenantUnit._id}
+          unitNumber={reservedTenantUnit.unitNumber}
+          onCreateFullTenant={(prefill) => {
+            const [firstName, ...rest] = prefill.name.trim().split(' ');
+            setAssignPrefill({
+              firstName,
+              lastName: rest.join(' '),
+              email: prefill.email,
+              phone: prefill.phone,
+            });
+            setAssignUnit(reservedTenantUnit);
+            setReservedTenantUnit(null);
+          }}
         />
       )}
 

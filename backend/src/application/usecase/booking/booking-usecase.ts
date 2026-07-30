@@ -9,6 +9,9 @@ import { IBooking, BookingStatus } from "../../../domain/entities/Booking";
 import { IBookingRepository } from "../../../domain/repository/booking-repository-impl";
 import { IBuildingRepository } from "../../../domain/repository/building-repository-impl";
 import { IUnitRepository } from "../../../domain/repository/unit-repository-impl";
+import { IPlatformTransactionRepository } from "../../../domain/repository/platform-transaction-repository-impl";
+import { IPlatformSettingRepository } from "../../../domain/repository/platform-setting-repository-impl";
+import { IReservedTenantRepository } from "../../../domain/repository/reserved-tenant-repository-impl";
 import {
   ActivityLogAction,
   ActivityLogEntityType,
@@ -46,6 +49,9 @@ function toResponse(b: IBooking): BookingResponseDTO {
     status: b.status,
     refundStatus: b.refundStatus,
     refundedAt: b.refundedAt,
+    commissionRateSnapshot: b.commissionRateSnapshot,
+    commissionAmount: b.commissionAmount,
+    netAmountForBuilder: b.netAmountForBuilder,
     rejectionReason: b.rejectionReason,
     decidedBy: b.decidedBy,
     decidedAt: b.decidedAt,
@@ -63,7 +69,68 @@ export class BookingUseCases implements IBookingUseCases {
     private readonly notificationUc: INotificationUseCase,
     private readonly emailService: IEmailService,
     private readonly activityLogUc: IActivityLogUsecase,
+    private readonly platformTransactionRepo: IPlatformTransactionRepository,
+    private readonly platformSettingRepo: IPlatformSettingRepository,
+    private readonly reservedTenantRepo: IReservedTenantRepository,
   ) {}
+
+  private async getCommissionRate(): Promise<number> {
+    const settings = await this.platformSettingRepo.get();
+    const rate = settings.commissionRatePercentage;
+    return typeof rate === "number" && rate >= 0 && rate <= 100 ? rate : 10;
+  }
+
+  private async recordBookingPaymentLedger(booking: IBooking): Promise<void> {
+    const alreadyRecorded = await this.platformTransactionRepo.existsForBooking(
+      booking._id!,
+      "booking_payment",
+    );
+    if (alreadyRecorded) return;
+
+    const rate = await this.getCommissionRate();
+    const commissionAmount = Math.round(booking.amount * (rate / 100) * 100) / 100;
+    const netAmountForBuilder = Math.round((booking.amount - commissionAmount) * 100) / 100;
+
+    await this.bookingRepo.update(booking._id!, {
+      commissionRateSnapshot: rate,
+      commissionAmount,
+      netAmountForBuilder,
+    });
+
+    await this.platformTransactionRepo.create({
+      bookingId: booking._id!,
+      buildingId: booking.buildingId,
+      ownerId: booking.ownerId,
+      type: "booking_payment",
+      grossAmount: booking.amount,
+      commissionRateSnapshot: rate,
+      commissionAmount,
+      builderAmount: netAmountForBuilder,
+    });
+  }
+
+  private async recordRefundPenaltyLedger(booking: IBooking): Promise<void> {
+    const alreadyRecorded = await this.platformTransactionRepo.existsForBooking(
+      booking._id!,
+      "refund_penalty",
+    );
+    if (alreadyRecorded) return;
+
+    const commissionAmount = booking.commissionAmount ?? 0;
+    const netAmountForBuilder = booking.netAmountForBuilder ?? 0;
+    const rate = booking.commissionRateSnapshot ?? (await this.getCommissionRate());
+
+    await this.platformTransactionRepo.create({
+      bookingId: booking._id!,
+      buildingId: booking.buildingId,
+      ownerId: booking.ownerId,
+      type: "refund_penalty",
+      grossAmount: booking.amount,
+      commissionRateSnapshot: rate,
+      commissionAmount,
+      builderAmount: -(netAmountForBuilder + commissionAmount),
+    });
+  }
 
   private async assertAccess(
     booking: IBooking,
@@ -145,9 +212,7 @@ export class BookingUseCases implements IBookingUseCases {
         unitId: unit._id,
         userId: building.ownerId,
         description: `${booking.applicantName} applied to book "${building.name}" (${unit.unitNumber}) — ${
-          data.paymentMode === "online"
-            ? "online payment initiated"
-            : "pay at property"
+          data.paymentMode === "online" ? "online payment initiated" : "pay at property"
         }.`,
         metadata: { paymentMode: data.paymentMode, amount },
       })
@@ -224,41 +289,47 @@ export class BookingUseCases implements IBookingUseCases {
       razorpaySignature: data.razorpaySignature,
     });
 
-    await this.onPaymentConfirmed(updated!);
-    return toResponse(updated!);
+    const finalBooking = await this.onPaymentConfirmed(updated!);
+    return toResponse(finalBooking);
   }
 
-  private async onPaymentConfirmed(booking: IBooking): Promise<void> {
+  private async onPaymentConfirmed(booking: IBooking): Promise<IBooking> {
+    await this.recordBookingPaymentLedger(booking);
+    const refreshed = await this.bookingRepo.findById(booking._id!);
+    const finalBooking = refreshed ?? booking;
+
     this.activityLogUc
       .logActivity({
         action: ActivityLogAction.BOOKING_PAYMENT_RECEIVED,
         entityType: ActivityLogEntityType.BOOKING,
-        entityId: booking._id,
-        buildingId: booking.buildingId,
-        unitId: booking.unitId,
-        userId: booking.ownerId,
-        description: `Online payment of ₹${booking.amount} received for booking by ${booking.applicantName}.`,
-        metadata: { amount: booking.amount },
+        entityId: finalBooking._id,
+        buildingId: finalBooking.buildingId,
+        unitId: finalBooking.unitId,
+        userId: finalBooking.ownerId,
+        description: `Online payment of ₹${finalBooking.amount} received for booking by ${finalBooking.applicantName}.`,
+        metadata: { amount: finalBooking.amount },
       })
       .catch((err) => logger.error(String(err)));
 
     this.notificationUc
       .sendNotification({
-        userId: booking.ownerId,
+        userId: finalBooking.ownerId,
         title: "Booking payment received",
-        message: `${booking.applicantName} paid ₹${booking.amount} for a booking. Review the application to confirm or reject it.`,
+        message: `${finalBooking.applicantName} paid ₹${finalBooking.amount} for a booking. Review the application to confirm or reject it.`,
         notificationType: NotificationType.GENERAL,
         channel: NotificationChannel.EMAIL,
-        buildingId: booking.buildingId,
-        link: `/dashboard/bookings/${booking._id}`,
+        buildingId: finalBooking.buildingId,
+        link: `/dashboard/bookings/${finalBooking._id}`,
       })
       .catch((err) => logger.error("Failed to notify owner:", err));
 
     this.notifyApplicant(
-      booking.applicantEmail,
+      finalBooking.applicantEmail,
       "Payment received",
-      `Hi ${booking.applicantName}, we've received your payment of ₹${booking.amount}. Your booking is now under review.`,
+      `Hi ${finalBooking.applicantName}, we've received your payment of ₹${finalBooking.amount}. Your booking is now under review.`,
     );
+
+    return finalBooking;
   }
 
   async listForOwner(
@@ -310,6 +381,19 @@ export class BookingUseCases implements IBookingUseCases {
     });
 
     await this.unitRepo.update(booking.unitId, { status: "reserved" });
+
+    await this.reservedTenantRepo.upsertForUnit(booking.unitId, {
+      buildingId: booking.buildingId,
+      unitId: booking.unitId,
+      bookingId: booking._id!,
+      ownerId: booking.ownerId,
+      name: booking.applicantName,
+      email: booking.applicantEmail,
+      phone: booking.applicantPhone,
+      amount: booking.amount,
+      isPaid: booking.isPaid,
+      reservedAt: new Date(),
+    });
 
     const otherPending = await this.bookingRepo.findAll({
       unitId: booking.unitId,
@@ -430,6 +514,9 @@ export class BookingUseCases implements IBookingUseCases {
       refundId: refund.id,
     });
 
+    await this.recordRefundPenaltyLedger(updated!);
+    const finalBooking = (await this.bookingRepo.findById(id)) ?? updated!;
+
     this.activityLogUc
       .logActivity({
         action: ActivityLogAction.BOOKING_REFUND_INITIATED,
@@ -438,7 +525,9 @@ export class BookingUseCases implements IBookingUseCases {
         buildingId: booking.buildingId,
         unitId: booking.unitId,
         userId: requesterId,
-        description: `Refund of ₹${booking.amount} initiated for booking by ${booking.applicantName}.`,
+        description: `Refund of ₹${booking.amount} initiated for booking by ${booking.applicantName}. Commission of ₹${
+          booking.commissionAmount ?? 0
+        } is retained as a loss on the builder's account.`,
       })
       .catch((err) => logger.error(String(err)));
 
@@ -448,7 +537,7 @@ export class BookingUseCases implements IBookingUseCases {
       `Hi ${booking.applicantName}, a refund of ₹${booking.amount} has been initiated for your booking. It may take a few business days to reflect.`,
     );
 
-    return toResponse(updated!);
+    return toResponse(finalBooking);
   }
 
   async handleWebhookEvent(
@@ -493,6 +582,8 @@ export class BookingUseCases implements IBookingUseCases {
         status: "refunded",
         refundedAt: new Date(),
       });
+
+      await this.recordRefundPenaltyLedger(booking);
 
       this.activityLogUc
         .logActivity({

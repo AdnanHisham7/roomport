@@ -74,7 +74,7 @@ function ImageSlider({ images, alt }: { images: string[]; alt: string }) {
 }
 
 // ── Room detail card shown when a room tile is clicked ────────────────────────
-function RoomCard({ unit, onClose }: { unit: PublicUnit; onClose: () => void }) {
+function RoomCard({ unit, buildingSlug, onClose }: { unit: PublicUnit; buildingSlug: string; onClose: () => void }) {
   const [imgIdx, setImgIdx] = useState(0);
   const images = unit.images ?? [];
   return (
@@ -121,6 +121,12 @@ function RoomCard({ unit, onClose }: { unit: PublicUnit; onClose: () => void }) 
           </div>
         )}
 
+        <Link
+          to={`/listings/${buildingSlug}/rooms/${unit._id}`}
+          className="mt-3 flex items-center justify-center gap-1.5 rounded-xl bg-crimson-600 px-3 py-2 text-[13px] font-semibold text-white transition hover:bg-crimson-700"
+        >
+          View &amp; book this room
+        </Link>
         <button onClick={onClose} className="mt-2 text-xs text-ink-faint hover:text-ink">Clear selection</button>
       </Card>
     </motion.div>
@@ -152,10 +158,9 @@ export default function BuildingDetailPage() {
 
   const onInquire = async (values: { name: string; email: string; phone: string; message: string }) => {
     try {
-      await createInquiry({ buildingId: b._id, unitId: selectedUnit?._id, ...values }).unwrap();
+      await createInquiry({ buildingId: b._id, ...values }).unwrap();
       toast.success("Thanks! We've sent your inquiry to the property manager.");
       reset();
-      setSelectedUnit(null);
     } catch (err: any) {
       toast.error(err?.data?.message ?? 'Could not send inquiry.');
     }
@@ -194,7 +199,7 @@ export default function BuildingDetailPage() {
           {/* Floor plan — rooms are clickable to show detail in sidebar */}
           <div>
             <h2 className="mb-2 font-display text-lg font-semibold text-ink">Floor plan</h2>
-            <p className="mb-3 text-xs text-ink-faint">Click any room to see details and enquire.</p>
+            <p className="mb-3 text-xs text-ink-faint">Click any room to see details and book it.</p>
             <div className="flex flex-col-reverse gap-3">
               <AnimatePresence initial={false}>
                 {sortedFloors.map((floor, i) => (
@@ -216,23 +221,22 @@ export default function BuildingDetailPage() {
         <div className="space-y-5">
           <AnimatePresence>
             {selectedUnit && (
-              <RoomCard key={selectedUnit._id} unit={selectedUnit} onClose={() => setSelectedUnit(null)} />
+              <RoomCard key={selectedUnit._id} unit={selectedUnit} buildingSlug={b.slug ?? b._id} onClose={() => setSelectedUnit(null)} />
             )}
           </AnimatePresence>
 
-          <Card padding="lg">
-            <h3 className="mb-4 font-display text-base font-semibold text-ink">Enquire about this property</h3>
-            <form onSubmit={handleSubmit(onInquire)} className="flex flex-col gap-3">
-              <Input placeholder="Your name"        {...register('name',  { required: true })} />
-              <Input type="email" placeholder="your@email.com" {...register('email', { required: true })} />
-              <Input placeholder="Phone (optional)" {...register('phone')} />
-              <Textarea
-                placeholder={selectedUnit ? `I'm interested in room ${selectedUnit.unitNumber}…` : "Tell us what you're looking for…"}
-                {...register('message')}
-              />
-              <Button type="submit" loading={sending} icon={<Send className="size-4" />} className="justify-center">Send inquiry</Button>
-            </form>
-          </Card>
+          {!selectedUnit && (
+            <Card padding="lg">
+              <h3 className="mb-4 font-display text-base font-semibold text-ink">Enquire about this property</h3>
+              <form onSubmit={handleSubmit(onInquire)} className="flex flex-col gap-3">
+                <Input placeholder="Your name"        {...register('name',  { required: true })} />
+                <Input type="email" placeholder="your@email.com" {...register('email', { required: true })} />
+                <Input placeholder="Phone (optional)" {...register('phone')} />
+                <Textarea placeholder="Tell us what you're looking for…" {...register('message')} />
+                <Button type="submit" loading={sending} icon={<Send className="size-4" />} className="justify-center">Send inquiry</Button>
+              </form>
+            </Card>
+          )}
 
           {b.amenities?.length ? (
             <Card padding="md">

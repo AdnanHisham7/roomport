@@ -24,12 +24,7 @@ const BookingSchema = new Schema<IBookingDocument>(
       index: true,
     } as any,
     applicantName: { type: String, required: true, trim: true },
-    applicantEmail: {
-      type: String,
-      required: true,
-      trim: true,
-      lowercase: true,
-    },
+    applicantEmail: { type: String, required: true, trim: true, lowercase: true },
     applicantPhone: { type: String, default: null, trim: true },
     message: { type: String, default: null, trim: true },
     paymentMode: {
@@ -61,6 +56,9 @@ const BookingSchema = new Schema<IBookingDocument>(
       default: "none",
     },
     refundedAt: { type: Date, default: null },
+    commissionRateSnapshot: { type: Number, default: null },
+    commissionAmount: { type: Number, default: null },
+    netAmountForBuilder: { type: Number, default: null },
     rejectionReason: { type: String, default: null, trim: true },
     decidedBy: {
       type: Schema.Types.ObjectId,

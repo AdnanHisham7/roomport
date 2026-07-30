@@ -49,6 +49,9 @@ export interface BookingResponseDTO {
   status: BookingStatus;
   refundStatus: BookingRefundStatus;
   refundedAt?: Date;
+  commissionRateSnapshot?: number;
+  commissionAmount?: number;
+  netAmountForBuilder?: number;
   rejectionReason?: string;
   decidedBy?: string;
   decidedAt?: Date;

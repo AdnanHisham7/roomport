@@ -13,6 +13,7 @@ export interface CreateUnitDTO {
   bedrooms: number;
   bathrooms: number;
   status?: UnitStatus;
+  tokenAmount?: number;
 }
 
 export interface UpdateUnitDTO extends Partial<CreateUnitDTO> {}

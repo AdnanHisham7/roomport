@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { Layers, DollarSign, BedDouble, Bath } from 'lucide-react';
+import { Layers, DollarSign, BedDouble, Bath, Coins } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
 import { Button, Input } from '@/components/ui';
 import { useCreateFloorMutation, useUpdateFloorMutation } from '@/store/api/buildingApi';
@@ -92,6 +92,7 @@ interface AddRoomValues {
   rentAmount: number;
   bedrooms: number;
   bathrooms: number;
+  tokenAmount?: number;
 }
 
 export function AddRoomModal({
@@ -109,7 +110,7 @@ export function AddRoomModal({
 }) {
   const [createUnit, { isLoading }] = useCreateUnitMutation();
   const { register, handleSubmit, reset, formState: { errors } } = useForm<AddRoomValues>({
-    values: { unitNumber: suggestedUnitNumber, rentAmount: 0, bedrooms: 1, bathrooms: 1 },
+    values: { unitNumber: suggestedUnitNumber, rentAmount: 0, bedrooms: 1, bathrooms: 1, tokenAmount: 0 },
   });
 
   const onSubmit = async (values: AddRoomValues) => {
@@ -121,6 +122,7 @@ export function AddRoomModal({
         rentAmount: Number(values.rentAmount),
         bedrooms: Number(values.bedrooms),
         bathrooms: Number(values.bathrooms),
+        tokenAmount: Number(values.tokenAmount) || 0,
       }).unwrap();
       toast.success(`Room ${values.unitNumber} added.`);
       reset();
@@ -139,6 +141,13 @@ export function AddRoomModal({
           <Input label="Bedrooms" type="number" min={0} leftIcon={<BedDouble className="size-4" />} {...register('bedrooms', { valueAsNumber: true })} />
           <Input label="Bathrooms" type="number" min={0} leftIcon={<Bath className="size-4" />} {...register('bathrooms', { valueAsNumber: true })} />
         </div>
+        <Input
+          label="Booking token amount (optional)"
+          type="number" step="0.01" min={0}
+          leftIcon={<Coins className="size-4" />}
+          hint="Amount applicants can pay online to book this room from the public listing"
+          {...register('tokenAmount', { valueAsNumber: true })}
+        />
         <Button type="submit" loading={isLoading} className="mt-1 justify-center">Add room</Button>
       </form>
     </Modal>

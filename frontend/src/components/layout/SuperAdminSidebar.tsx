@@ -2,7 +2,7 @@ import { NavLink } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   LayoutDashboard, Users2, Building2, CreditCard,
-  History, Settings, ChevronsLeft, ShieldCheck, MessageSquare, ArrowUpCircle,
+  History, Settings, ChevronsLeft, ShieldCheck, MessageSquare, ArrowUpCircle, Wallet,
 } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { toggleSidebar } from '@/store/slices/uiSlice';
@@ -15,6 +15,7 @@ const navItems = [
   { to: '/super-admin/buildings',           label: 'Buildings',         icon: Building2 },
   { to: '/super-admin/subscriptions',       label: 'Subscriptions',     icon: CreditCard },
   { to: '/super-admin/upgrade-requests',    label: 'Upgrade Requests',  icon: ArrowUpCircle, badge: true },
+  { to: '/super-admin/payouts',             label: 'Payouts',           icon: Wallet },
   { to: '/super-admin/demo-requests',       label: 'Demo Requests',     icon: MessageSquare },
   { to: '/super-admin/activity',            label: 'Activity',          icon: History },
   { to: '/super-admin/settings',            label: 'Settings',          icon: Settings },

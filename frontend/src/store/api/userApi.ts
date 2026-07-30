@@ -17,7 +17,7 @@ export const userApi = baseApi.injectEndpoints({
       query: () => '/users/profile',
       providesTags: ['Profile'],
     }),
-    updateProfile: builder.mutation<{ data: FullProfile; message?: string }, Partial<{ first_name: string; last_name: string; phone_number: string; profile_image: string }>>({
+    updateProfile: builder.mutation<{ data: FullProfile; message?: string }, Partial<{ first_name: string; last_name: string; phone_number: string; profile_image: string; payoutQrCodeUrl: string }>>({
       query: (body) => ({ url: '/users/profile', method: 'PUT', body }),
       invalidatesTags: ['Profile'],
     }),

@@ -80,9 +80,15 @@ interface Props {
   unit:         Unit;
   buildingId:   string;
   buildingName: string;
+  prefill?: {
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    phone?: string;
+  };
 }
 
-export function AssignTenantModal({ open, onClose, unit, buildingId, buildingName }: Props) {
+export function AssignTenantModal({ open, onClose, unit, buildingId, buildingName, prefill }: Props) {
   const [step,       setStep]       = useState<1 | 2>(1);
   const [tenantData, setTenantData] = useState<TenantFormValues | null>(null);
 
@@ -91,7 +97,17 @@ export function AssignTenantModal({ open, onClose, unit, buildingId, buildingNam
   const [updateUnit,      { isLoading: updatingUnit }]      = useUpdateUnitMutation();
 
   const tenantForm = useForm<TenantFormValues>({
-    defaultValues: { rentType: 'monthly', dueDate: 1, rentAmount: unit.rentAmount ?? 0 },
+    defaultValues: {
+      firstName: prefill?.firstName ?? '',
+      lastName: prefill?.lastName ?? '',
+      email: prefill?.email ?? '',
+      phone: prefill?.phone ?? '',
+      job: '',
+      notes: '',
+      rentType: 'monthly',
+      dueDate: 1,
+      rentAmount: unit.rentAmount ?? 0,
+    },
   });
   const agmtForm = useForm<AgreementFormValues>({
     defaultValues: {

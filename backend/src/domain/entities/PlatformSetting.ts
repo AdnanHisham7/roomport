@@ -11,6 +11,7 @@ export interface IPlatformSetting {
   currency: string;
   maintenanceMode: boolean;
   maxFeaturedBuildings: number;
+  commissionRatePercentage: number;
   updatedBy?: string;
   createdAt?: Date;
   updatedAt?: Date;

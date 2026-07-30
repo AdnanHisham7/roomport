@@ -39,6 +39,7 @@ const ExpensesPage         = lazy(() => import('@/pages/builder/ExpensesPage'));
 const InquiriesPage        = lazy(() => import('@/pages/builder/InquiriesPage'));
 const OffersPage           = lazy(() => import('@/pages/builder/OffersPage'));
 const BookingsPage         = lazy(() => import('@/pages/builder/BookingsPage'));
+const TransactionsPage     = lazy(() => import('@/pages/builder/TransactionsPage'));
 const ManagersPage         = lazy(() => import('@/pages/builder/ManagersPage'));
 const BillingPage          = lazy(() => import('@/pages/builder/BillingPage'));
 const ActivityPage         = lazy(() => import('@/pages/builder/ActivityPage'));
@@ -55,6 +56,7 @@ const SAActivityPage       = lazy(() => import('@/pages/superadmin/ActivityLogsP
 const SASettingsPage       = lazy(() => import('@/pages/superadmin/SettingsPage'));
 const SADemoRequestsPage   = lazy(() => import('@/pages/superadmin/DemoRequestsPage'));
 const SAUpgradeRequestsPage = lazy(() => import('@/pages/superadmin/UpgradeRequestsPage'));
+const SAPayoutsPage        = lazy(() => import('@/pages/superadmin/PayoutsPage'));
 
 const NotFoundPage         = lazy(() => import('@/pages/NotFoundPage'));
 
@@ -114,6 +116,7 @@ function App() {
           <Route path="inquiries"      element={<InquiriesPage />} />
           <Route path="offers"         element={<OffersPage />} />
           <Route path="bookings"       element={<BookingsPage />} />
+          <Route path="transactions"   element={<TransactionsPage />} />
           <Route path="managers"       element={<ManagersPage />} />
           <Route path="billing"        element={<BillingPage />} />
           <Route path="activity"       element={<ActivityPage />} />
@@ -130,6 +133,7 @@ function App() {
           <Route path="buildings"           element={<SAModerationPage />} />
           <Route path="subscriptions"       element={<SASubscriptionsPage />} />
           <Route path="upgrade-requests"    element={<SAUpgradeRequestsPage />} />
+          <Route path="payouts"             element={<SAPayoutsPage />} />
           <Route path="activity"            element={<SAActivityPage />} />
           <Route path="settings"            element={<SASettingsPage />} />
           <Route path="demo-requests"       element={<SADemoRequestsPage />} />

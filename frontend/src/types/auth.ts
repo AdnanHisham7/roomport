@@ -20,6 +20,7 @@ export interface FullProfile extends AuthUser {
   paymentStatus: boolean;
   phone_verified: boolean;
   subscriptionId?: string;
+  payoutQrCodeUrl?: string;
   createdAt?: string;
   updatedAt?: string;
 }

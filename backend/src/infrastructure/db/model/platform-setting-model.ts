@@ -17,6 +17,7 @@ const PlatformSettingSchema = new Schema<IPlatformSettingDocument>(
     currency: { type: String, default: "inr" },
     maintenanceMode: { type: Boolean, default: false },
     maxFeaturedBuildings: { type: Number, default: 8 },
+    commissionRatePercentage: { type: Number, default: 10, min: 0, max: 100 },
     updatedBy: {
       type: Schema.Types.ObjectId,
       ref: "User",

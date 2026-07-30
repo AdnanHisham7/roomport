@@ -31,6 +31,8 @@ import {
   bookingController,
   tenantPortalController,
   offerController,
+  payoutController,
+  reservedTenantController,
 } from "./infrastructure/DIContainer";
 import { createAgreementRouter } from "./interface/routers/agreement-router";
 import { createPaymentRouter } from "./interface/routers/payment-router";
@@ -53,6 +55,8 @@ import { createPaymentRecordRouter } from "./interface/routers/payment-record-ro
 import { createBookingRouter } from "./interface/routers/booking-router";
 import { createTenantPortalRouter } from "./interface/routers/tenant-portal-router";
 import { createOfferRouter } from "./interface/routers/offer-router";
+import { createPayoutRouter } from "./interface/routers/payout-router";
+import { createReservedTenantRouter } from "./interface/routers/reserved-tenant-router";
 
 const createApp = (): Application => {
   const app = express();
@@ -146,6 +150,11 @@ const createApp = (): Application => {
     createTenantPortalRouter(tenantPortalController),
   );
   app.use("/api/v1/offers", createOfferRouter(offerController));
+  app.use("/api/v1/payouts", createPayoutRouter(payoutController));
+  app.use(
+    "/api/v1/reserved-tenants",
+    createReservedTenantRouter(reservedTenantController),
+  );
 
   app.use((_req: Request, res: Response) =>
     res

@@ -18,6 +18,9 @@ export interface Booking {
   status: BookingStatus;
   refundStatus: BookingRefundStatus;
   refundedAt?: string;
+  commissionRateSnapshot?: number;
+  commissionAmount?: number;
+  netAmountForBuilder?: number;
   rejectionReason?: string;
   decidedBy?: string;
   decidedAt?: string;

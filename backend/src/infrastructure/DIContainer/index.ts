@@ -67,6 +67,13 @@ import { TenantPortalController } from "../../interface/controllers/tenant-porta
 import { OfferRepository } from "../repository/offer-repository";
 import { OfferUseCases } from "../../application/usecase/offer/offer-usecase";
 import { OfferController } from "../../interface/controllers/offer-controller";
+import { PlatformTransactionRepository } from "../repository/platform-transaction-repository";
+import { BuilderPayoutRepository } from "../repository/builder-payout-repository";
+import { ReservedTenantRepository } from "../repository/reserved-tenant-repository";
+import { PayoutUseCases } from "../../application/usecase/payout/payout-usecase";
+import { PayoutController } from "../../interface/controllers/payout-controller";
+import { ReservedTenantUseCases } from "../../application/usecase/reserved-tenant/reserved-tenant-usecase";
+import { ReservedTenantController } from "../../interface/controllers/reserved-tenant-controller";
 
 const userRepository = new UserRepository();
 const tenantRepository = new TenantRepository();
@@ -85,6 +92,9 @@ const platformSettingRepository = new PlatformSettingRepository();
 const paymentRecordRepository = new PaymentRecordRepository();
 const bookingRepository = new BookingRepository();
 const offerRepository = new OfferRepository();
+const platformTransactionRepository = new PlatformTransactionRepository();
+const builderPayoutRepository = new BuilderPayoutRepository();
+const reservedTenantRepository = new ReservedTenantRepository();
 
 const jwtService = new JwtService();
 const emailService = new EmailService();
@@ -144,6 +154,7 @@ const tenantUseCases = new TenantUseCases(
   activityLogUseCase,
   tenantPortalTokenService,
   emailService,
+  reservedTenantRepository,
 );
 const tenantPortalUseCases = new TenantPortalUseCases(
   tenantRepository,
@@ -182,6 +193,20 @@ const bookingUseCases = new BookingUseCases(
   notificationUseCase,
   emailService,
   activityLogUseCase,
+  platformTransactionRepository,
+  platformSettingRepository,
+  reservedTenantRepository,
+);
+const payoutUseCases = new PayoutUseCases(
+  userRepository,
+  platformTransactionRepository,
+  builderPayoutRepository,
+  platformSettingRepository,
+);
+const reservedTenantUseCases = new ReservedTenantUseCases(
+  reservedTenantRepository,
+  unitRepository,
+  buildingAccessUseCase,
 );
 const publicUseCases = new PublicUseCases(
   buildingRepository,
@@ -285,3 +310,7 @@ export const tenantPortalController = new TenantPortalController(
   tenantPortalUseCases,
 );
 export const offerController = new OfferController(offerUseCases);
+export const payoutController = new PayoutController(payoutUseCases);
+export const reservedTenantController = new ReservedTenantController(
+  reservedTenantUseCases,
+);

@@ -13,6 +13,7 @@ export interface CreateUnitInput {
   bedrooms: number;
   bathrooms: number;
   status?: string;
+  tokenAmount?: number;
 }
 
 export const unitApi = baseApi.injectEndpoints({
@@ -51,6 +52,7 @@ export const unitApi = baseApi.injectEndpoints({
 export const {
   useGetUnitsQuery,
   useGetUnitByIdQuery,
+  useLazyGetUnitByIdQuery,
   useCreateUnitMutation,
   useUpdateUnitMutation,
   useDeleteUnitMutation,

@@ -29,6 +29,9 @@ export interface IBooking {
   refundId?: string;
   refundStatus: BookingRefundStatus;
   refundedAt?: Date;
+  commissionRateSnapshot?: number;
+  commissionAmount?: number;
+  netAmountForBuilder?: number;
   rejectionReason?: string;
   decidedBy?: string;
   decidedAt?: Date;

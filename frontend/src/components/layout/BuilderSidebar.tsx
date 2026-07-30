@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import {
   LayoutDashboard, Building2, Users, FileSignature, FileText, Wallet,
   MessageSquare, UserCog, CreditCard, History, ChevronsLeft, Building,
-  CalendarCheck, Tag,
+  CalendarCheck, Tag, Receipt,
 } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { toggleSidebar } from '@/store/slices/uiSlice';
@@ -20,6 +20,7 @@ const navItems = [
   { to: '/dashboard/inquiries', label: 'Inquiries', icon: MessageSquare },
   { to: '/dashboard/bookings', label: 'Bookings', icon: CalendarCheck },
   { to: '/dashboard/offers', label: 'Offers', icon: Tag },
+  { to: '/dashboard/transactions', label: 'Transactions', icon: Receipt },
   { to: '/dashboard/managers', label: 'Managers', icon: UserCog, adminOnly: true },
   { to: '/dashboard/billing', label: 'Billing', icon: CreditCard, adminOnly: true },
   { to: '/dashboard/activity', label: 'Activity', icon: History },

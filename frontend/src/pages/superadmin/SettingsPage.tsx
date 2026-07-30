@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { IndianRupee, Save, Star } from 'lucide-react';
+import { IndianRupee, Save, Star, Percent } from 'lucide-react';
 import { Button, Input } from '@/components/ui';
 import { Card } from '@/components/ui/Card';
 import { PageLoader } from '@/components/ui/Avatar';
@@ -15,6 +15,7 @@ interface FormValues {
   yearlyPricePerUnit:      number;
   currency:                string;
   maxFeaturedBuildings:    number;
+  commissionRatePercentage: number;
 }
 
 export default function SettingsPage() {
@@ -33,6 +34,7 @@ export default function SettingsPage() {
           yearlyPricePerUnit:      s.yearlyPricePerUnit      ?? s.pricePerUnit * 10,
           currency:                s.currency,
           maxFeaturedBuildings:    s.maxFeaturedBuildings,
+          commissionRatePercentage: s.commissionRatePercentage ?? 10,
         }
       : undefined,
   });
@@ -51,6 +53,7 @@ export default function SettingsPage() {
         yearlyPricePerBuilding:  Number(values.yearlyPricePerBuilding),
         yearlyPricePerUnit:      Number(values.yearlyPricePerUnit),
         maxFeaturedBuildings:    Number(values.maxFeaturedBuildings),
+        commissionRatePercentage: Number(values.commissionRatePercentage),
       }).unwrap();
       toast.success('Platform settings updated.');
     } catch (err: any) {
@@ -130,6 +133,20 @@ export default function SettingsPage() {
               leftIcon={<Star className="size-4" />}
               hint="Max simultaneous featured listings on the public homepage."
               {...register('maxFeaturedBuildings', { required: true, valueAsNumber: true })}
+            />
+          </div>
+
+          <div className="border-t border-line pt-5">
+            <p className="mb-3 text-sm font-semibold text-ink">Booking commission</p>
+            <Input
+              label="Commission rate on online booking payments"
+              type="number"
+              min={0}
+              max={100}
+              step="0.5"
+              leftIcon={<Percent className="size-4" />}
+              hint="Percentage of each online booking token payment retained by the platform. Applies to new payments going forward — existing bookings keep the rate that was active when they were paid."
+              {...register('commissionRatePercentage', { required: true, valueAsNumber: true, min: 0, max: 100 })}
             />
           </div>
 

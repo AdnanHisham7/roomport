@@ -61,7 +61,7 @@ export const baseApi = createApi({
     'Profile', 'Building', 'Floor', 'Unit', 'Tenant', 'Agreement', 'Document',
     'Expense', 'Notification', 'Managers', 'ActivityLog', 'Subscription', 'Inquiry',
     'SuperAdminStats', 'SuperAdminBuilders', 'SuperAdminBuildings', 'SuperAdminSettings',
-    'Public', 'Analytics', 'PaymentRecord', 'UpgradeRequests', 'Booking', 'Offer',
+    'Public', 'Analytics', 'PaymentRecord', 'UpgradeRequests', 'Booking', 'Offer', 'Payout',
   ],
   endpoints: () => ({}),
 });

@@ -139,6 +139,7 @@ export interface PlatformSetting {
   currency: string;
   maintenanceMode: boolean;
   maxFeaturedBuildings: number;
+  commissionRatePercentage: number;
   updatedAt?: string;
 }
 

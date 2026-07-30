@@ -49,6 +49,7 @@ const UserSchema = new Schema<IUserDocument>(
       ref: "Subscription",
       default: null,
     } as any,
+    payoutQrCodeUrl: { type: String, default: null },
   },
   { timestamps: true },
 );
