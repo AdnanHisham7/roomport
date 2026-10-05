@@ -62,11 +62,33 @@ const createApp = (): Application => {
   const app = express();
   app.use(morgan("dev"));
   app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
+  const allowedOrigins = [
+    env.APP_URL,
+    env.FRONTEND_URL,
+    "https://roomport.noxwing.site",
+    "http://roomport.noxwing.site",
+    "http://localhost:3000",
+    "http://localhost:5173",
+  ]
+    .filter(Boolean)
+    .map((url) => url.replace(/\/$/, ""));
+
   app.use(
     cors({
-      origin: env.APP_URL ?? "http://localhost:3000",
+      origin: (requestOrigin, callback) => {
+        if (!requestOrigin) return callback(null, true);
+        const normalized = requestOrigin.replace(/\/$/, "");
+        if (
+          allowedOrigins.includes(normalized) ||
+          normalized.endsWith(".noxwing.site") ||
+          normalized.includes("localhost")
+        ) {
+          return callback(null, true);
+        }
+        return callback(null, true);
+      },
       credentials: true,
-      methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+      methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
       allowedHeaders: ["Content-Type", "Authorization"],
     }),
   );
