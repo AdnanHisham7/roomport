@@ -39,7 +39,7 @@ export default function BookingsPage() {
 
   const buildingNames = new Map((buildingsData?.data ?? []).map((b) => [b._id, b.name]));
   const bookings = [...(data?.data ?? [])].sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    (a, b) => new Date(b.createdAt ?? 0).getTime() - new Date(a.createdAt ?? 0).getTime()
   );
 
   const onConfirm = async () => {

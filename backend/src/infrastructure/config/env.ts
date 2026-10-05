@@ -35,8 +35,9 @@ export const env = {
   SMTP_SECURE: optional("SMTP_SECURE", "false"),
   SMTP_USER: optional("SMTP_USER"),
   SMTP_PASS: optional("SMTP_PASS"),
-  EMAIL_FROM: optional("EMAIL_FROM", "no-reply@example.com"),
-  EMAIL_FROM_NAME: optional("EMAIL_FROM_NAME", "Rental Platform"),
+  RESEND_API_KEY: optional("RESEND_API_KEY"),
+  EMAIL_FROM: optional("EMAIL_FROM", "onboarding@resend.dev"),
+  EMAIL_FROM_NAME: optional("EMAIL_FROM_NAME", "RoomPort"),
 
   TWILIO_ACCOUNT_SID: optional("TWILIO_ACCOUNT_SID"),
   TWILIO_AUTH_TOKEN: optional("TWILIO_AUTH_TOKEN"),

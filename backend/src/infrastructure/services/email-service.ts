@@ -1,24 +1,32 @@
 import { env } from "../config/env";
 import nodemailer from "nodemailer";
-import { IEmailService } from "../../application/interface/common/email-service-usecase.interface";
+import { Resend } from "resend";
+import {
+  IEmailService,
+  ISendMailOptions,
+} from "../../application/interface/common/email-service-usecase.interface";
 import { OtpPurpose } from "../../shared/enums/OtpPurpose.enum";
 import { logger } from "../../shared/logger/logger";
 
 export class EmailService implements IEmailService {
-  private transporter: nodemailer.Transporter;
+  private resend: Resend | null = null;
+  private transporter: nodemailer.Transporter | null = null;
 
   constructor() {
-    this.transporter = nodemailer.createTransport({
-      host: env.SMTP_HOST,
-      port: Number(env.SMTP_PORT) || 587,
-      secure: env.SMTP_SECURE === "true",
-      auth: { user: env.SMTP_USER, pass: env.SMTP_PASS },
-      tls: {
-        rejectUnauthorized: false,
-      },
-    });
+    if (env.RESEND_API_KEY) {
+      this.resend = new Resend(env.RESEND_API_KEY);
+      logger.info("Resend email service initialized (using Resend HTTP API).");
+    } else if (env.SMTP_USER && env.SMTP_PASS) {
+      this.transporter = nodemailer.createTransport({
+        host: env.SMTP_HOST,
+        port: Number(env.SMTP_PORT) || 587,
+        secure: env.SMTP_SECURE === "true",
+        auth: { user: env.SMTP_USER, pass: env.SMTP_PASS },
+        tls: {
+          rejectUnauthorized: false,
+        },
+      });
 
-    if (env.SMTP_USER && env.SMTP_PASS) {
       this.transporter.verify((error) => {
         if (error) {
           logger.error(
@@ -30,23 +38,72 @@ export class EmailService implements IEmailService {
         }
       });
     } else {
-      logger.error(
-        "SMTP_USER / SMTP_PASS are not configured — email sending is disabled.",
+      logger.warn(
+        "Neither RESEND_API_KEY nor SMTP credentials configured — email sending is disabled.",
       );
     }
   }
 
   private from(): string {
-    return env.EMAIL_FROM_NAME
-      ? `"${env.EMAIL_FROM_NAME}" <${env.EMAIL_FROM || env.SMTP_USER}>`
-      : env.EMAIL_FROM || env.SMTP_USER || "";
+    const fromAddress =
+      env.EMAIL_FROM ||
+      (this.resend ? "onboarding@resend.dev" : env.SMTP_USER || "");
+    const fromName = env.EMAIL_FROM_NAME || "RoomPort";
+    return fromName ? `${fromName} <${fromAddress}>` : fromAddress;
+  }
+
+  private async sendMail(opts: {
+    to: string;
+    subject: string;
+    html: string;
+  }): Promise<void> {
+    const { to, subject, html } = opts;
+
+    if (this.resend) {
+      const { data, error } = await this.resend.emails.send({
+        from: this.from(),
+        to,
+        subject,
+        html,
+      });
+
+      if (error) {
+        logger.error(`Resend failed to deliver email to ${to}:`, error);
+        throw new Error(`Resend email delivery failed: ${error.message}`);
+      }
+
+      logger.info(
+        `Email successfully sent via Resend to ${to} (id: ${data?.id})`,
+      );
+      return;
+    }
+
+    if (this.transporter) {
+      await this.transporter.sendMail({
+        from: this.from(),
+        to,
+        subject,
+        html,
+      });
+      logger.info(`Email successfully sent via SMTP to ${to}`);
+      return;
+    }
+
+    logger.error(`Cannot send email to ${to}: No email provider configured.`);
+    throw new Error(
+      "Email sending failed: No email provider configured (RESEND_API_KEY or SMTP credentials required).",
+    );
+  }
+
+  // ── Direct send implementation ─────────────────────────────────────────────
+  async send(opts: ISendMailOptions): Promise<void> {
+    await this.sendMail(opts);
   }
 
   // ── Generic OTP email (auth flows) ─────────────────────────────────────────
   async sendOtpEmail(to: string, otp: string, purpose: string): Promise<void> {
     const { subject, body } = this.buildOtpContent(otp, purpose);
-    await this.transporter.sendMail({
-      from: this.from(),
+    await this.sendMail({
       to,
       subject,
       html: body,
@@ -59,13 +116,12 @@ export class EmailService implements IEmailService {
     name: string,
     tempPassword: string,
   ): Promise<void> {
-    await this.transporter.sendMail({
-      from: this.from(),
+    await this.sendMail({
       to,
-      subject: "Welcome to PropertySaaS! Here are your login credentials",
+      subject: "Welcome to RoomPort! Here are your login credentials",
       html: `
         <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px">
-          <h2 style="color:#333">Welcome to PropertySaaS, ${name}!</h2>
+          <h2 style="color:#333">Welcome to RoomPort, ${name}!</h2>
           <p>Your payment was successful and your account has been automatically created.</p>
           <p>You can now log in using the following credentials:</p>
           <div style="background:#f4f4f4;padding:15px;border-radius:6px;margin:20px 0">
@@ -84,13 +140,12 @@ export class EmailService implements IEmailService {
     name: string,
     tempPassword: string,
   ): Promise<void> {
-    await this.transporter.sendMail({
-      from: this.from(),
+    await this.sendMail({
       to,
-      subject: "Welcome to PropertySaaS! Here are your login credentials",
+      subject: "Welcome to RoomPort! Here are your login credentials",
       html: `
         <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px">
-          <h2 style="color:#333">Welcome to PropertySaaS, ${name}!</h2>
+          <h2 style="color:#333">Welcome to RoomPort, ${name}!</h2>
           <p>An account has been created for you by our team.</p>
           <p>You can now log in using the following credentials:</p>
           <div style="background:#f4f4f4;padding:15px;border-radius:6px;margin:20px 0">
@@ -111,8 +166,7 @@ export class EmailService implements IEmailService {
     agreementTitle: string,
     expiresInHours: number,
   ): Promise<void> {
-    await this.transporter.sendMail({
-      from: this.from(),
+    await this.sendMail({
       to,
       subject: `Action Required: Sign Your Rental Agreement — ${agreementTitle}`,
       html: `
@@ -143,8 +197,7 @@ export class EmailService implements IEmailService {
     tenantName: string,
     otp: string,
   ): Promise<void> {
-    await this.transporter.sendMail({
-      from: this.from(),
+    await this.sendMail({
       to,
       subject: "Your Rental Agreement Signing OTP",
       html: `
@@ -176,8 +229,7 @@ export class EmailService implements IEmailService {
     agreementTitle: string,
     pdfUrl: string,
   ): Promise<void> {
-    await this.transporter.sendMail({
-      from: this.from(),
+    await this.sendMail({
       to,
       subject: `Agreement Signed ✓ — ${agreementTitle}`,
       html: `
@@ -208,8 +260,7 @@ export class EmailService implements IEmailService {
     subject: string,
     message: string,
   ): Promise<void> {
-    await this.transporter.sendMail({
-      from: this.from(),
+    await this.sendMail({
       to,
       subject,
       html: `

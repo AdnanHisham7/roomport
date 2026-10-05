@@ -115,7 +115,7 @@ const createApp = (): Application => {
     });
   });
 
-  app.use("/api/v1/auth", authLimiter, authRoutes);
+  app.use("/api/v1/auth", authRoutes);
   app.use("/api/v1/system", systemRoutes);
   app.use("/api/v1/tenants", createTenantRouter(tenantController));
   app.use("/api/v1/documents", createDocumentRouter(documentController));
