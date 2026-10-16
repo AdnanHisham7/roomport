@@ -11,6 +11,7 @@ import systemRoutes from "./interface/routers/bootstrap-router";
 import { createTenantRouter } from "./interface/routers/tenant-router";
 import { createDocumentRouter } from "./interface/routers/document-router";
 import { globalErrorHandler } from "./interface/middleware/errorhandle-middleware";
+import { serveOrRegenerateAgreementPdf } from "./interface/routers/agreement-pdf-handler";
 import {
   documentController,
   tenantController,
@@ -135,16 +136,26 @@ const createApp = (): Application => {
   if (!fs.existsSync(uploadsDir)) {
     fs.mkdirSync(uploadsDir, { recursive: true });
   }
-  app.use(
-    "/uploads",
-    express.static(uploadsDir, {
-      maxAge: "1d",
-      setHeaders: (res) => {
-        res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
-        res.setHeader("Access-Control-Allow-Origin", "*");
-      },
-    }),
+
+  // Agreement PDF serving with resilient on-demand regeneration for ephemeral PaaS disk (Render)
+  app.get(
+    [
+      "/uploads/agreements/:filename",
+      "/api/v1/uploads/agreements/:filename",
+    ],
+    serveOrRegenerateAgreementPdf,
   );
+
+  const staticUploads = express.static(uploadsDir, {
+    maxAge: "1d",
+    setHeaders: (res) => {
+      res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+      res.setHeader("Access-Control-Allow-Origin", "*");
+    },
+  });
+
+  app.use("/uploads", staticUploads);
+  app.use("/api/v1/uploads/static", staticUploads);
 
   app.get("/health", (_req: Request, res: Response) => {
     res.status(200).json({
@@ -177,6 +188,7 @@ const createApp = (): Application => {
     createSubscriptionRouter(subscriptionController),
   );
   app.use("/api/v1/uploads", createUploadRouter(uploadController));
+  app.use("/api/v1/uploads", staticUploads);
   app.use("/api/v1/inquiries", createInquiryRouter(inquiryController));
   app.use("/api/v1/super-admin", createSuperAdminRouter(superAdminController));
   app.use("/api/v1/public", createPublicRouter(publicController));

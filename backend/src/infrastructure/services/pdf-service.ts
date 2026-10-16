@@ -6,6 +6,7 @@ import { cloudinaryService } from "./cloudinary.service";
 
 export interface AgreementPdfData {
   agreementId: string;
+  customFilename?: string;
   title: string;
   body: string;
   terms?: string;
@@ -127,7 +128,9 @@ export class PdfService {
 
   async generateAgreementPdf(data: AgreementPdfData): Promise<string> {
     return new Promise((resolve, reject) => {
-      const filename = `agreement_${data.agreementId}_${Date.now()}.pdf`;
+      const filename =
+        data.customFilename ||
+        `agreement_${data.agreementId}_${Date.now()}.pdf`;
       const filepath = path.join(this.outputDir, filename);
       const fileUrl = `/uploads/agreements/${filename}`;
 
@@ -279,3 +282,5 @@ export class PdfService {
     });
   }
 }
+
+export const defaultPdfService = new PdfService();

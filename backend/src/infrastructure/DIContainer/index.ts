@@ -314,3 +314,4 @@ export const payoutController = new PayoutController(payoutUseCases);
 export const reservedTenantController = new ReservedTenantController(
   reservedTenantUseCases,
 );
+export { pdfService };

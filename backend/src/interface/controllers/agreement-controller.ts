@@ -4,6 +4,7 @@ import fs from "fs";
 import { IAgreementUseCases } from "../../application/interface/agreement/agreement-usecase.interface";
 import { AppError } from "../../shared/error/app-error";
 import { IBuildingAccessUseCase } from "../../application/interface/building/building-access-usecase.interface";
+import { serveOrRegenerateAgreementPdf } from "../routers/agreement-pdf-handler";
 
 export class AgreementController {
   constructor(
@@ -248,17 +249,26 @@ export class AgreementController {
         res.status(404).json({ message: "PDF not generated yet for this agreement." });
         return;
       }
-      if (agreement.finalPdfUrl.startsWith("http")) {
+
+      const isExternalCdn =
+        (agreement.finalPdfUrl.startsWith("http://") ||
+          agreement.finalPdfUrl.startsWith("https://")) &&
+        !agreement.finalPdfUrl.includes("/uploads/agreements/");
+
+      if (isExternalCdn) {
         res.redirect(agreement.finalPdfUrl);
         return;
       }
+
       const filename = path.basename(agreement.finalPdfUrl);
       const filePath = path.resolve(process.cwd(), "uploads", "agreements", filename);
       if (fs.existsSync(filePath)) {
         res.download(filePath, filename);
         return;
       }
-      res.status(404).json({ message: "PDF file not found on server." });
+
+      (req as any).params = { ...req.params, filename };
+      await serveOrRegenerateAgreementPdf(req, res);
     } catch (err) {
       this.handleError(res, err, "Failed to download PDF.");
     }
@@ -277,17 +287,26 @@ export class AgreementController {
         res.status(404).json({ message: "PDF not available or agreement not completed." });
         return;
       }
-      if (agreement.finalPdfUrl.startsWith("http")) {
+
+      const isExternalCdn =
+        (agreement.finalPdfUrl.startsWith("http://") ||
+          agreement.finalPdfUrl.startsWith("https://")) &&
+        !agreement.finalPdfUrl.includes("/uploads/agreements/");
+
+      if (isExternalCdn) {
         res.redirect(agreement.finalPdfUrl);
         return;
       }
+
       const filename = path.basename(agreement.finalPdfUrl);
       const filePath = path.resolve(process.cwd(), "uploads", "agreements", filename);
       if (fs.existsSync(filePath)) {
         res.download(filePath, filename);
         return;
       }
-      res.status(404).json({ message: "PDF file not found on server." });
+
+      (req as any).params = { ...req.params, filename };
+      await serveOrRegenerateAgreementPdf(req, res);
     } catch (err) {
       this.handleError(res, err, "Failed to download PDF.");
     }
