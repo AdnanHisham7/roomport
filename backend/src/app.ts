@@ -1,3 +1,5 @@
+import path from "path";
+import fs from "fs";
 import { env } from "./infrastructure/config/env";
 import express, { Application, Request, Response } from "express";
 import cors from "cors";
@@ -127,6 +129,22 @@ const createApp = (): Application => {
   app.use(express.json({ limit: "10mb" }));
   app.use(express.urlencoded({ extended: true, limit: "10mb" }));
   // app.use(globalLimiter);
+
+  // Serve uploads (agreements, receipts, etc.) statically with CORS headers
+  const uploadsDir = path.resolve(process.cwd(), "uploads");
+  if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+  }
+  app.use(
+    "/uploads",
+    express.static(uploadsDir, {
+      maxAge: "1d",
+      setHeaders: (res) => {
+        res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+        res.setHeader("Access-Control-Allow-Origin", "*");
+      },
+    }),
+  );
 
   app.get("/health", (_req: Request, res: Response) => {
     res.status(200).json({

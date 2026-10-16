@@ -349,13 +349,17 @@ export class AgreementUseCases implements IAgreementUseCases {
       },
     });
 
+    const emailPdfUrl = finalPdfUrl.startsWith("http")
+      ? finalPdfUrl
+      : `${(env.BACKEND_URL || "").replace(/\/$/, "")}${finalPdfUrl.startsWith("/") ? "" : "/"}${finalPdfUrl}`;
+
     // Non-blocking completion email
     this.emailService
       .sendCompletionEmail(
         tenant.email,
         `${tenant.firstName} ${tenant.lastName}`,
         agreement.title,
-        finalPdfUrl,
+        emailPdfUrl,
       )
       .catch((err) =>
         logger.error("[EmailService] Completion email failed:", err),

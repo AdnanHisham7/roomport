@@ -8,6 +8,7 @@ import { SkeletonRow } from '@/components/ui/Skeleton';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { useGetDocumentsQuery, useDeleteDocumentMutation } from '@/store/api/documentApi';
 import { formatDate, titleCase, formatFileSize } from '@/utils/format';
+import { resolvePdfUrl } from '@/utils/pdfUrl';
 import type { DocumentType } from '@/types/tenancy';
 
 const typeOptions = [
@@ -67,7 +68,7 @@ export default function DocumentsPage() {
                 </div>
               </div>
               <div className="flex items-center gap-1.5">
-                <a href={d.fileUrl} target="_blank" rel="noreferrer" className="flex size-8 items-center justify-center rounded-lg text-ink-faint hover:bg-paper-dim hover:text-ink"><Download className="size-4" /></a>
+                <a href={resolvePdfUrl(d.fileUrl)} target="_blank" rel="noreferrer" className="flex size-8 items-center justify-center rounded-lg text-ink-faint hover:bg-paper-dim hover:text-ink"><Download className="size-4" /></a>
                 <button onClick={() => setDeleteTarget(d._id)} className="flex size-8 items-center justify-center rounded-lg text-crimson-500 hover:bg-crimson-50"><Trash2 className="size-4" /></button>
               </div>
             </div>

@@ -6,6 +6,8 @@ import { FileSignature, PenLine, ShieldCheck, Download, CheckCircle } from 'luci
 import { Button, Input } from '@/components/ui';
 import { Card } from '@/components/ui/Card';
 import { Spinner } from '@/components/ui/Avatar';
+import { AgreementViewer } from '@/components/agreement/AgreementViewer';
+import { resolvePdfUrl } from '@/utils/pdfUrl';
 import { useViewAgreementByTokenQuery, useInitiateSigningMutation, useVerifySigningOtpMutation } from '@/store/api/agreementApi';
 import { formatCurrency, formatDate } from '@/utils/format';
 
@@ -56,14 +58,11 @@ export default function SignAgreementPage() {
 
         <Card padding="lg" className="mb-5">
           <h1 className="font-display text-xl font-semibold text-ink">{a.title}</h1>
-          <div className="mt-2 flex flex-wrap gap-4 text-sm text-ink-soft">
+          <div className="mt-2 mb-4 flex flex-wrap gap-4 text-sm text-ink-soft">
             <span>{formatDate(a.startDate)} – {formatDate(a.endDate)}</span>
             <span className="font-medium text-crimson-600">{formatCurrency(a.monthlyRent)}/mo</span>
           </div>
-          <div className="mt-4 max-h-60 overflow-y-auto rounded-xl border border-line bg-paper-dim p-4 text-sm leading-relaxed text-ink-soft">
-            {a.body}
-            {a.terms && <><br /><br /><strong className="text-ink">Additional terms:</strong><br />{a.terms}</>}
-          </div>
+          <AgreementViewer body={a.body} terms={a.terms} maxHeight="360px" />
         </Card>
 
         <AnimatePresence mode="wait">
@@ -132,7 +131,7 @@ export default function SignAgreementPage() {
                 <h2 className="font-display text-xl font-semibold text-ink">Agreement signed!</h2>
                 <p className="mt-2 text-sm text-ink-soft">A signed copy has been sent to your email and the property manager has been notified.</p>
                 {pdfUrl && (
-                  <Button className="mt-5 justify-center" icon={<Download className="size-4" />} onClick={() => window.open(pdfUrl, '_blank')}>
+                  <Button className="mt-5 justify-center" icon={<Download className="size-4" />} onClick={() => window.open(resolvePdfUrl(pdfUrl), '_blank')}>
                     Download signed PDF
                   </Button>
                 )}

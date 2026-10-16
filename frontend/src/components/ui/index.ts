@@ -10,3 +10,4 @@ export * from './ConfirmDialog';
 export * from './Pagination';
 export * from './Tabs';
 export * from './Avatar';
+export * from './RichTextEditor';

@@ -52,6 +52,32 @@ export class CloudinaryService {
     });
   }
 
+  async uploadRaw(
+    buffer: Buffer,
+    folder: string,
+    filename: string,
+  ): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          folder: `brift/${folder}`,
+          public_id: filename.replace(/\.[^/.]+$/, ""),
+          resource_type: "raw",
+          overwrite: true,
+        },
+        (error, result) => {
+          if (error || !result)
+            return reject(error ?? new Error("Cloudinary raw upload failed"));
+          resolve(result.secure_url);
+        },
+      );
+      const readable = new Readable();
+      readable.push(buffer);
+      readable.push(null);
+      readable.pipe(uploadStream);
+    });
+  }
+
   async delete(publicId: string): Promise<void> {
     await cloudinary.uploader.destroy(publicId);
   }

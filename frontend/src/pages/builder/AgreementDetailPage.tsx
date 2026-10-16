@@ -7,6 +7,8 @@ import { Card } from '@/components/ui/Card';
 import { StatusPill } from '@/components/ui/Badge';
 import { PageLoader } from '@/components/ui/Avatar';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
+import { AgreementViewer } from '@/components/agreement/AgreementViewer';
+import { resolvePdfUrl } from '@/utils/pdfUrl';
 import { useGetAgreementByIdQuery, useSendSigningLinkMutation, useCancelAgreementMutation } from '@/store/api/agreementApi';
 import { formatCurrency, formatDate, formatDateTime } from '@/utils/format';
 
@@ -75,14 +77,8 @@ export default function AgreementDetailPage() {
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
         <div className="flex flex-col gap-5 lg:col-span-2">
           <Card padding="lg">
-            <h3 className="mb-3 font-display text-sm font-semibold text-ink">Agreement body</h3>
-            <p className="whitespace-pre-wrap text-sm leading-relaxed text-ink-soft">{a.body}</p>
-            {a.terms && (
-              <div className="mt-4 border-t border-line pt-4">
-                <p className="mb-2 text-xs font-semibold text-ink-faint uppercase tracking-wider">Additional terms</p>
-                <p className="whitespace-pre-wrap text-sm text-ink-soft">{a.terms}</p>
-              </div>
-            )}
+            <h3 className="mb-3 font-display text-sm font-semibold text-ink">Agreement Content</h3>
+            <AgreementViewer body={a.body} terms={a.terms} maxHeight="450px" />
             {a.typedSignatureName && (
               <div className="mt-4 border-t border-line pt-4">
                 <p className="text-xs font-medium text-ink-faint">Signed as</p>
@@ -94,7 +90,7 @@ export default function AgreementDetailPage() {
           {a.finalPdfUrl && (
             <Card padding="md" className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-sm font-medium text-sage-600"><CheckCircle className="size-4" /> Agreement completed — PDF ready</div>
-              <Button size="sm" variant="subtle" icon={<Download className="size-4" />} onClick={() => window.open(a.finalPdfUrl, '_blank')}>Download PDF</Button>
+              <Button size="sm" variant="subtle" icon={<Download className="size-4" />} onClick={() => window.open(resolvePdfUrl(a.finalPdfUrl), '_blank')}>Download PDF</Button>
             </Card>
           )}
         </div>

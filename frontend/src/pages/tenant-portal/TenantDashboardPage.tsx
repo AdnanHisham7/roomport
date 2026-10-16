@@ -3,6 +3,7 @@ import { Card } from '@/components/ui/Card';
 import { StatusPill } from '@/components/ui/Badge';
 import { PageLoader } from '@/components/ui/Avatar';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { resolvePdfUrl } from '@/utils/pdfUrl';
 import { useGetTenantDashboardQuery } from '@/store/api/tenantPortalApi';
 import { formatCurrency, formatDate } from '@/utils/format';
 
@@ -101,7 +102,7 @@ export default function TenantDashboardPage() {
                 <div className="flex items-center gap-2">
                   <StatusPill status={agreement.status} />
                   {agreement.finalPdfUrl && (
-                    <a href={agreement.finalPdfUrl} target="_blank" rel="noreferrer" className="text-xs font-medium text-crimson-600 hover:underline">
+                    <a href={resolvePdfUrl(agreement.finalPdfUrl)} target="_blank" rel="noreferrer" className="text-xs font-medium text-crimson-600 hover:underline">
                       View PDF
                     </a>
                   )}
@@ -119,7 +120,7 @@ export default function TenantDashboardPage() {
             ) : (
               <div className="flex flex-col divide-y divide-line">
                 {documents.map((d) => (
-                  <a key={d._id} href={d.fileUrl} target="_blank" rel="noreferrer" className="flex items-center justify-between py-2 text-sm text-ink-soft hover:text-crimson-600">
+                  <a key={d._id} href={resolvePdfUrl(d.fileUrl)} target="_blank" rel="noreferrer" className="flex items-center justify-between py-2 text-sm text-ink-soft hover:text-crimson-600">
                     <span className="truncate">{d.title}</span>
                     {d.expiryDate && <span className="flex items-center gap-1 text-xs text-ink-faint"><CalendarClock className="size-3" /> {formatDate(d.expiryDate)}</span>}
                   </a>

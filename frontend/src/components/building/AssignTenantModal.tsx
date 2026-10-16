@@ -9,14 +9,14 @@
  * the tenant is ever created, so no orphan tenant records can exist.
  */
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { toast } from 'sonner';
 import {
   User, Mail, Phone, IndianRupee, Briefcase, FileText, Calendar,
   ChevronRight, ChevronLeft, CheckCircle2,
 } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
-import { Button, Input, Select, Textarea } from '@/components/ui';
+import { Button, Input, Select, Textarea, RichTextEditor } from '@/components/ui';
 import { useCreateTenantMutation } from '@/store/api/tenantApi';
 import { useCreateAgreementMutation } from '@/store/api/agreementApi';
 import { useUpdateUnitMutation } from '@/store/api/unitApi';
@@ -69,9 +69,29 @@ function buildDefaultBody(kind: AgreementKind, tenant: TenantFormValues, unit: U
     monthly: 'month', quarterly: 'quarter', half_yearly: 'half-year', yearly: 'year', custom: 'period',
   };
   if (kind === 'rental') {
-    return `This Rental Agreement is entered into between the property owner ("Landlord") and ${tenant.firstName} ${tenant.lastName} ("Tenant") for Unit ${unit.unitNumber}, ${buildingName}.\n\nThe Tenant agrees to pay a rent of ₹${tenant.rentAmount} per ${cycleLabel[tenant.rentType] ?? 'period'}, due on the ${tenant.dueDate}${ordinal(tenant.dueDate)} of each ${cycleLabel[tenant.rentType] ?? 'period'}. Rent must be paid in full and on time. Late payment may incur a penalty as agreed upon by both parties.\n\nThe Tenant shall maintain the premises in good condition and shall not sublet without prior written consent of the Landlord.`;
+    return `<h2>Rental Agreement Terms</h2>
+<p>This Rental Agreement is entered into between the property owner (<strong>"Landlord"</strong>) and <strong>${tenant.firstName} ${tenant.lastName}</strong> (<strong>"Tenant"</strong>) for <u>Unit ${unit.unitNumber}, ${buildingName}</u>.</p>
+
+<h3>1. Rent &amp; Payment Schedule</h3>
+<p>The Tenant agrees to pay a recurring rent of <strong>₹${tenant.rentAmount}</strong> per <strong>${cycleLabel[tenant.rentType] ?? 'period'}</strong>, due on the <strong>${tenant.dueDate}${ordinal(tenant.dueDate)}</strong> of each period. Rent must be paid in full and on time. Late payments may incur an agreed penalty.</p>
+
+<h3>2. Premises Maintenance &amp; Subletting</h3>
+<p>The Tenant shall maintain the premises in good and clean condition and <u>shall not sublet</u> without the prior written consent of the Landlord.</p>
+
+<h3>3. Security &amp; General Conduct</h3>
+<p>The Tenant agrees to respect community guidelines, keep noise levels reasonable, and avoid causing disturbance to neighboring occupants.</p>`;
   }
-  return `This Lease Agreement is entered into between the property owner ("Landlord") and ${tenant.firstName} ${tenant.lastName} ("Tenant") for Unit ${unit.unitNumber}, ${buildingName}.\n\nThe Tenant agrees to make a one-time lease payment of ₹${tenant.rentAmount} for the entire lease period as specified herein. This payment covers exclusive occupancy for the agreed duration.\n\nThe Tenant shall maintain the premises in good condition and shall not sublet without prior written consent of the Landlord.`;
+  return `<h2>Lease Agreement Terms</h2>
+<p>This Lease Agreement is entered into between the property owner (<strong>"Landlord"</strong>) and <strong>${tenant.firstName} ${tenant.lastName}</strong> (<strong>"Tenant"</strong>) for <u>Unit ${unit.unitNumber}, ${buildingName}</u>.</p>
+
+<h3>1. Lump-Sum Lease Consideration</h3>
+<p>The Tenant agrees to make a one-time lump-sum lease payment of <strong>₹${tenant.rentAmount}</strong> for the entire specified lease period. This payment grants exclusive occupancy for the agreed duration.</p>
+
+<h3>2. Premises Maintenance &amp; Care</h3>
+<p>The Tenant shall maintain the premises in clean condition and <u>shall not sublease or assign</u> the unit to any third party without prior written consent.</p>
+
+<h3>3. Possession &amp; Handover</h3>
+<p>Upon expiry of the agreed tenure, the Tenant agrees to hand over peaceful and vacant possession of the premises to the Landlord.</p>`;
 }
 
 interface Props {
@@ -214,7 +234,7 @@ export function AssignTenantModal({ open, onClose, unit, buildingId, buildingNam
       open={open}
       onClose={handleClose}
       title={step === 1 ? `Assign tenant — Room ${unit.unitNumber}` : 'Draft agreement'}
-      size="lg"
+      size="xl"
     >
       {/* Step indicator */}
       <div className="mb-5 flex items-center gap-2">
@@ -306,8 +326,36 @@ export function AssignTenantModal({ open, onClose, unit, buildingId, buildingNam
             />
           </div>
 
-          <Textarea label="Agreement body" hint="Edit the auto-generated text below as needed" rows={8} error={agmtForm.formState.errors.body?.message} {...agmtForm.register('body', { required: 'Agreement body is required' })} />
-          <Textarea label="Additional terms (optional)" rows={3} {...agmtForm.register('terms')} />
+          <Controller
+            name="body"
+            control={agmtForm.control}
+            rules={{ required: 'Agreement body is required' }}
+            render={({ field }) => (
+              <RichTextEditor
+                label="Agreement body"
+                hint="Format legal terms with headings, underlines, lists, and linebreaks"
+                value={field.value}
+                onChange={field.onChange}
+                error={agmtForm.formState.errors.body?.message}
+                required
+                minHeight="220px"
+              />
+            )}
+          />
+
+          <Controller
+            name="terms"
+            control={agmtForm.control}
+            render={({ field }) => (
+              <RichTextEditor
+                label="Additional terms (optional)"
+                hint="Special clauses, maintenance covenants, or rules"
+                value={field.value}
+                onChange={field.onChange}
+                minHeight="120px"
+              />
+            )}
+          />
 
           <div className="flex items-center justify-between gap-3">
             <Button type="button" variant="subtle" icon={<ChevronLeft className="size-4" />} onClick={() => setStep(1)}>Back</Button>

@@ -1,4 +1,6 @@
 import type { Request, Response } from "express";
+import path from "path";
+import fs from "fs";
 import { IAgreementUseCases } from "../../application/interface/agreement/agreement-usecase.interface";
 import { AppError } from "../../shared/error/app-error";
 import { IBuildingAccessUseCase } from "../../application/interface/building/building-access-usecase.interface";
@@ -225,6 +227,69 @@ export class AgreementController {
       return res.status(200).json(result);
     } catch (err) {
       return this.handleError(res, err, "Failed to verify OTP.");
+    }
+  };
+
+  downloadPdf = async (
+    req: Request<{ id: string }>,
+    res: Response,
+  ): Promise<void> => {
+    try {
+      const agreement = await this.agreementUseCases.getById(req.params.id);
+      const user = req.user!;
+      if (user.role !== "super_admin") {
+        await this.assertBuildingOwnership(
+          agreement.buildingId,
+          user.userId,
+          user.role,
+        );
+      }
+      if (!agreement.finalPdfUrl) {
+        res.status(404).json({ message: "PDF not generated yet for this agreement." });
+        return;
+      }
+      if (agreement.finalPdfUrl.startsWith("http")) {
+        res.redirect(agreement.finalPdfUrl);
+        return;
+      }
+      const filename = path.basename(agreement.finalPdfUrl);
+      const filePath = path.resolve(process.cwd(), "uploads", "agreements", filename);
+      if (fs.existsSync(filePath)) {
+        res.download(filePath, filename);
+        return;
+      }
+      res.status(404).json({ message: "PDF file not found on server." });
+    } catch (err) {
+      this.handleError(res, err, "Failed to download PDF.");
+    }
+  };
+
+  downloadPdfByToken = async (
+    req: Request<{ token: string }>,
+    res: Response,
+  ): Promise<void> => {
+    try {
+      const publicAgmt = await this.agreementUseCases.viewByToken({
+        rawToken: req.params.token,
+      });
+      const agreement = await this.agreementUseCases.getById(publicAgmt._id);
+      if (!agreement.finalPdfUrl) {
+        res.status(404).json({ message: "PDF not available or agreement not completed." });
+        return;
+      }
+      if (agreement.finalPdfUrl.startsWith("http")) {
+        res.redirect(agreement.finalPdfUrl);
+        return;
+      }
+      const filename = path.basename(agreement.finalPdfUrl);
+      const filePath = path.resolve(process.cwd(), "uploads", "agreements", filename);
+      if (fs.existsSync(filePath)) {
+        res.download(filePath, filename);
+        return;
+      }
+      res.status(404).json({ message: "PDF file not found on server." });
+    } catch (err) {
+      this.handleError(res, err, "Failed to download PDF.");
     }
   };
 

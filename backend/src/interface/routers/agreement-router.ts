@@ -37,10 +37,17 @@ export const createAgreementRouter = (c: AgreementController): Router => {
     authorize(...ADMIN_ROLES),
     c.cancel,
   );
+  router.get(
+    "/agreement/:id/download",
+    authenticate,
+    authorize(...ADMIN_ROLES),
+    c.downloadPdf,
+  );
 
   router.get("/sign/:token", c.viewByToken);
   router.post("/sign/:token/initiate", c.initiateSigning);
   router.post("/sign/:token/verify-otp", c.verifySigningOtp);
+  router.get("/sign/:token/download", c.downloadPdfByToken);
 
   return router;
 };

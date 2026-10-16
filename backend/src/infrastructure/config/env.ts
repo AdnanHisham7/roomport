@@ -17,6 +17,10 @@ export const env = {
   NODE_ENV: optional("NODE_ENV", "development"),
   PORT: optional("PORT", "5000"),
   APP_URL: optional("APP_URL", "http://localhost:3000"),
+  BACKEND_URL: optional(
+    "BACKEND_URL",
+    optional("SERVER_URL", `http://localhost:${optional("PORT", "5000")}`),
+  ),
 
   MONGO_URI: getRequired("MONGO_URI"),
 
